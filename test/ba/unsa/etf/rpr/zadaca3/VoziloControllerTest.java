@@ -274,7 +274,8 @@ class VoziloControllerTest {
         // Provjeravamo da li je Skoda zaista dodata u proizvodjace
         ObservableList<Proizvodjac> proizvodjacs = dao.getProizvodjaci();
         assertEquals(4, proizvodjacs.size());
-        assertEquals(4, proizvodjacs.get(3).getId());
-        assertEquals("Skoda", proizvodjacs.get(3).getNaziv());
+        // Ovo će vratiti abecedno, tako da će škoda biti na indeksu 2 (poslije Renault a prije Volskwagen)
+        assertEquals(4, proizvodjacs.get(2).getId());
+        assertEquals("Skoda", proizvodjacs.get(2).getNaziv());
     }
 }
