@@ -190,7 +190,7 @@ class VlasnikControllerTest {
 
         robot.clickOn("#postanskiBrojField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
-        robot.write("73000");
+        robot.write("75000");
 
         robot.clickOn("#okButton");
 
@@ -318,7 +318,7 @@ class VlasnikControllerTest {
         robot.write("Zenica");
 
         robot.clickOn("#postanskiBrojField");
-        robot.write("73000");
+        robot.write("75000");
 
         // Sve validno, prozor se zatvara
         robot.clickOn("#okButton");
@@ -344,6 +344,6 @@ class VlasnikControllerTest {
         assertEquals(3, mjesta.size());
         assertEquals(3, mjesta.get(2).getId());
         assertEquals("Zenica", mjesta.get(2).getNaziv());
-        assertEquals("73000", mjesta.get(2).getPostanskiBroj());
+        assertEquals("75000", mjesta.get(2).getPostanskiBroj());
     }
 }
