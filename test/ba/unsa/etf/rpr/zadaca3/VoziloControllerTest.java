@@ -1,5 +1,6 @@
 package ba.unsa.etf.rpr.zadaca3;
 
+import static org.junit.jupiter.api.Assertions.*;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -27,13 +28,14 @@ import org.testfx.framework.junit5.Start;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 @ExtendWith(ApplicationExtension.class)
-class VlasnikControllerTest {
+class VoziloControllerTest {
     Stage theStage;
     VozilaDAO dao;
-    VlasnikController controller;
+    VoziloController controller;
 
     @Start
     public void start (Stage stage) throws Exception {
@@ -51,18 +53,18 @@ class VlasnikControllerTest {
         dao = new VozilaDAOBaza();
 
         // Ovo bi trebalo da iskopira fajl iz resources u test-resources, a ipak radi i sa mavenom
-        File fxml = new File("resources/fxml/vlasnik.fxml");
+        File fxml = new File("resources/fxml/vozilo.fxml");
         if (fxml.exists()) {
-            File rsrc = new File("test-resources/fxml/vlasnik.fxml");
+            File rsrc = new File("test-resources/fxml/vozilo.fxml");
             if (rsrc.exists()) rsrc.delete();
             Files.copy(fxml.toPath(), rsrc.toPath());
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vlasnik.fxml"));
-        VlasnikController vlasnikController = new VlasnikController(dao, null);
-        loader.setController(vlasnikController);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vozilo.fxml"));
+        VoziloController voziloController = new VoziloController(dao, null);
+        loader.setController(voziloController);
         Parent root = loader.load();
-        stage.setTitle("Vlasnik");
+        stage.setTitle("Vozilo");
         stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
         stage.setResizable(false);
         stage.show();
@@ -83,7 +85,7 @@ class VlasnikControllerTest {
         // Forma nije validna i neće se zatvoriti!
         assertTrue(theStage.isShowing());
 
-        TextField ime = robot.lookup("#imeField").queryAs(TextField.class);
+        TextField ime = robot.lookup("#modelField").queryAs(TextField.class);
         Background bg = ime.getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills())
@@ -93,21 +95,17 @@ class VlasnikControllerTest {
     }
 
     @Test
-    public void testImeValidacija (FxRobot robot) {
+    public void testModelValidacija (FxRobot robot) {
         // Ovim testom provjeravamo sva polja čiji je uslov validnosti da polje nije prazno
-        robot.clickOn("#imeField");
+        robot.clickOn("#modelField");
         robot.write("abc");
-        robot.clickOn("#prezimeField");
+        robot.clickOn("#brojSasijeField");
         robot.write("d");
-        robot.clickOn("#imeRoditeljaField");
-        robot.write("e");
-        robot.clickOn("#adresaField");
-        robot.write("f");
 
         robot.clickOn("#okButton");
         // Forma nije validna i neće se zatvoriti!
 
-        TextField ime = robot.lookup("#imeField").queryAs(TextField.class);
+        TextField ime = robot.lookup("#modelField").queryAs(TextField.class);
         Background bg = ime.getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills()) {
@@ -116,92 +114,7 @@ class VlasnikControllerTest {
         }
         assertTrue(colorFound);
 
-        ime = robot.lookup("#prezimeField").queryAs(TextField.class);
-        bg = ime.getBackground();
-        colorFound = false;
-        for (BackgroundFill bf : bg.getFills())
-            if (bf.getFill().toString().contains("adff2f"))
-                colorFound = true;
-        assertTrue(colorFound);
-
-        ime = robot.lookup("#imeRoditeljaField").queryAs(TextField.class);
-        bg = ime.getBackground();
-        colorFound = false;
-        for (BackgroundFill bf : bg.getFills())
-            if (bf.getFill().toString().contains("adff2f"))
-                colorFound = true;
-        assertTrue(colorFound);
-
-        ime = robot.lookup("#adresaField").queryAs(TextField.class);
-        bg = ime.getBackground();
-        colorFound = false;
-        for (BackgroundFill bf : bg.getFills())
-            if (bf.getFill().toString().contains("adff2f"))
-                colorFound = true;
-        assertTrue(colorFound);
-
-    }
-
-    @Test
-    public void testDatumValidacija (FxRobot robot) {
-        robot.clickOn("#datumField");
-        robot.write("1/1/2020");
-
-        robot.clickOn("#okButton");
-
-        DatePicker ime = robot.lookup("#datumField").queryAs(DatePicker.class);
-        Background bg = ime.getEditor().getBackground();
-        boolean colorFound = false;
-        for (BackgroundFill bf : bg.getFills())
-            if (bf.getFill().toString().contains("ffb6c1"))
-                colorFound = true;
-        assertTrue(colorFound);
-
-        robot.clickOn("#datumField");
-        robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
-        robot.write("1/1/2018");
-
-        robot.clickOn("#okButton");
-
-        ime = robot.lookup("#datumField").queryAs(DatePicker.class);
-        bg = ime.getEditor().getBackground();
-        colorFound = false;
-        for (BackgroundFill bf : bg.getFills())
-            if (bf.getFill().toString().contains("adff2f"))
-                colorFound = true;
-        assertTrue(colorFound);
-    }
-
-    @Test
-    public void testNovoMjesto (FxRobot robot) {
-        // Ako se unese novo mjesto prebivališta, polje poštanski broj ne smije biti prazno
-        robot.clickOn("#adresaMjesto");
-        robot.write("Zenica");
-
-        robot.clickOn("#okButton");
-
-        TextField ime = robot.lookup("#postanskiBrojField").queryAs(TextField.class);
-        Background bg = ime.getBackground();
-        boolean colorFound = false;
-        for (BackgroundFill bf : bg.getFills())
-            if (bf.getFill().toString().contains("ffb6c1"))
-                colorFound = true;
-        assertTrue(colorFound);
-
-        robot.clickOn("#postanskiBrojField");
-        robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
-        robot.write("75000");
-
-        robot.clickOn("#okButton");
-
-        // Dajemo vremena da se validira poštanski broj
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ime = robot.lookup("#postanskiBrojField").queryAs(TextField.class);
+        ime = robot.lookup("#brojSasijeField").queryAs(TextField.class);
         bg = ime.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
@@ -210,40 +123,16 @@ class VlasnikControllerTest {
         assertTrue(colorFound);
     }
 
-    @Test
-    public void testMjesta (FxRobot robot) {
-        ComboBox adresaMjesto = robot.lookup("#adresaMjesto").queryAs(ComboBox.class);
-        Platform.runLater(() -> adresaMjesto.show());
 
-        // Čekamo da se pojavi meni
-        try {
-            Thread.sleep(400);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        robot.clickOn("Sarajevo");
-        //robot.press(KeyCode.DOWN).press(KeyCode.ENTER);
-
-        String mjesto = robot.lookup("#adresaMjesto").queryAs(ComboBox.class).getValue().toString();
-        assertEquals("Sarajevo", mjesto);
-
-        String postanskiBroj = robot.lookup("#postanskiBrojField").queryAs(TextField.class).getText();
-        assertEquals("71000", postanskiBroj);
-
-    }
 
     @Test
-    public void testJmbgValidacija (FxRobot robot) {
-        robot.clickOn("#datumField");
-        robot.write("1/8/2003");
-
-        robot.clickOn("#jmbgField");
+    public void testTablicaValidacija (FxRobot robot) {
+        robot.clickOn("#brojTablicaField");
         robot.write("1234");
 
         robot.clickOn("#okButton");
 
-        TextField ime = robot.lookup("#jmbgField").queryAs(TextField.class);
+        TextField ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
         Background bg = ime.getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills())
@@ -251,13 +140,13 @@ class VlasnikControllerTest {
                 colorFound = true;
         assertTrue(colorFound);
 
-        robot.clickOn("#jmbgField");
+        robot.clickOn("#brojTablicaField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
-        robot.write("080100350");
+        robot.write("A12345678");
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#jmbgField").queryAs(TextField.class);
+        ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
         bg = ime.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
@@ -265,13 +154,13 @@ class VlasnikControllerTest {
                 colorFound = true;
         assertTrue(colorFound);
 
-        robot.clickOn("#jmbgField");
+        robot.clickOn("#brojTablicaField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
-        robot.write("0801003500006");
+        robot.write("A12-B-678"); // slovo B ne može
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#jmbgField").queryAs(TextField.class);
+        ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
         bg = ime.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
@@ -279,13 +168,27 @@ class VlasnikControllerTest {
                 colorFound = true;
         assertTrue(colorFound);
 
-        robot.clickOn("#jmbgField");
+        robot.clickOn("#brojTablicaField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
-        robot.write("0801003500007");
+        robot.write("123-A-456");
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#jmbgField").queryAs(TextField.class);
+        ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
+        bg = ime.getBackground();
+        colorFound = false;
+        for (BackgroundFill bf : bg.getFills())
+            if (bf.getFill().toString().contains("ffb6c1"))
+                colorFound = true;
+        assertTrue(colorFound);
+
+        robot.clickOn("#brojTablicaField");
+        robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
+        robot.write("M23-K-456");
+
+        robot.clickOn("#okButton");
+
+        ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
         bg = ime.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
@@ -295,22 +198,9 @@ class VlasnikControllerTest {
     }
 
     @Test
-    public void testDodavanje (FxRobot robot) {
-        robot.clickOn("#imeField");
-        robot.write("abc");
-        robot.clickOn("#prezimeField");
-        robot.write("d");
-        robot.clickOn("#imeRoditeljaField");
-        robot.write("e");
-        robot.clickOn("#adresaField");
-        robot.write("f");
-        robot.clickOn("#datumField");
-        robot.write("1/8/2003");
-        robot.clickOn("#jmbgField");
-        robot.write("0801003500007");
-
-        ComboBox mjestoRodjenja = robot.lookup("#mjestoRodjenja").queryAs(ComboBox.class);
-        Platform.runLater(() -> mjestoRodjenja.show());
+    public void testProizvodjac (FxRobot robot) {
+        ComboBox proizvodjacCombo = robot.lookup("#proizvodjacCombo").queryAs(ComboBox.class);
+        Platform.runLater(() -> proizvodjacCombo.show());
 
         // Čekamo da se pojavi meni
         try {
@@ -319,46 +209,73 @@ class VlasnikControllerTest {
             e.printStackTrace();
         }
 
-        robot.clickOn("Sarajevo");
+        robot.clickOn("Renault");
 
-        robot.clickOn("#adresaMjesto");
-        robot.write("Zenica");
-
-        robot.clickOn("#postanskiBrojField");
-        robot.write("75000");
-
-        // Sve validno, prozor se zatvara
         robot.clickOn("#okButton");
 
-        // Dajemo vremena da se validira poštanski broj
+        ComboBox ime = robot.lookup("#proizvodjacCombo").queryAs(ComboBox.class);
+        Background bg = ime.getEditor().getBackground();
+        boolean colorFound = false;
+        for (BackgroundFill bf : bg.getFills())
+            if (bf.getFill().toString().contains("adff2f"))
+                colorFound = true;
+        assertTrue(colorFound);
+
+        robot.clickOn("#proizvodjacCombo");
+        robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
+        robot.press(KeyCode.DELETE).release(KeyCode.DELETE);
+
+        robot.clickOn("#okButton");
+
+        ime = robot.lookup("#proizvodjacCombo").queryAs(ComboBox.class);
+        bg = ime.getEditor().getBackground();
+        colorFound = false;
+        for (BackgroundFill bf : bg.getFills())
+            if (bf.getFill().toString().contains("ffb6c1"))
+                colorFound = true;
+        assertTrue(colorFound);
+    }
+
+    @Test
+    public void testDodavanje (FxRobot robot) {
+        robot.clickOn("#proizvodjacCombo");
+        robot.write("Skoda");
+        robot.clickOn("#modelField");
+        robot.write("Fabia");
+        robot.clickOn("#brojSasijeField");
+        robot.write("1234193459845");
+        robot.clickOn("#brojTablicaField");
+        robot.write("M23-K-456");
+
+        ComboBox vlasnikCombo = robot.lookup("#vlasnikCombo").queryAs(ComboBox.class);
+        Platform.runLater(() -> vlasnikCombo.show());
+
+        // Čekamo da se pojavi meni
         try {
-            Thread.sleep(5000);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        assertFalse(theStage.isShowing());
+        robot.clickOn("Mehic Meho");
 
-        // Da li je novi vlasnik u bazi
-        ObservableList<Vlasnik> vlasnici = dao.getVlasnici();
-        assertEquals(2, vlasnici.size());
-        assertEquals(2, vlasnici.get(1).getId());
-        assertEquals("abc", vlasnici.get(1).getIme());
-        assertEquals("d", vlasnici.get(1).getPrezime());
-        assertEquals("e", vlasnici.get(1).getImeRoditelja());
-        assertEquals("f", vlasnici.get(1).getAdresaPrebivalista());
-        assertEquals(LocalDate.of(2003,1,8), vlasnici.get(1).getDatumRodjenja());
-        assertEquals("0801003500007", vlasnici.get(1).getJmbg());
-        assertEquals("Sarajevo", vlasnici.get(1).getMjestoRodjenja().getNaziv());
-        assertEquals(1, vlasnici.get(1).getMjestoRodjenja().getId());
-        assertEquals("Zenica", vlasnici.get(1).getMjestoPrebivalista().getNaziv());
-        assertEquals(3, vlasnici.get(1).getMjestoPrebivalista().getId());
+        robot.clickOn("#okButton");
+        assertFalse(theStage.isShowing()); // Prozor se zatvorio
 
-        // Provjeravamo da li je Zenica zaista dodata u mjesta
-        ObservableList<Mjesto> mjesta = dao.getMjesta();
-        assertEquals(3, mjesta.size());
-        assertEquals(3, mjesta.get(2).getId());
-        assertEquals("Zenica", mjesta.get(2).getNaziv());
-        assertEquals("75000", mjesta.get(2).getPostanskiBroj());
+        // Da li je novo vozilo u bazi
+        ObservableList<Vozilo> vozila = dao.getVozila();
+        assertEquals(2, vozila.size());
+        assertEquals(2, vozila.get(1).getId());
+        assertEquals("Skoda", vozila.get(1).getProizvodjac().getNaziv());
+        assertEquals("Fabia", vozila.get(1).getModel());
+        assertEquals("1234193459845", vozila.get(1).getBrojSasije());
+        assertEquals("M23-K-456", vozila.get(1).getBrojTablica());
+
+        // Provjeravamo da li je Skoda zaista dodata u proizvodjace
+        ObservableList<Proizvodjac> proizvodjacs = dao.getProizvodjaci();
+        assertEquals(4, proizvodjacs.size());
+        // Ovo će vratiti abecedno, tako da će škoda biti na indeksu 2 (poslije Renault a prije Volskwagen)
+        assertEquals(4, proizvodjacs.get(2).getId());
+        assertEquals("Skoda", proizvodjacs.get(2).getNaziv());
     }
 }

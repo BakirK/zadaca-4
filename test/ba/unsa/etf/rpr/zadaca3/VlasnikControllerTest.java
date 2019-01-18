@@ -194,6 +194,13 @@ class VlasnikControllerTest {
 
         robot.clickOn("#okButton");
 
+        // Dajemo vremena da se validira poštanski broj
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ime = robot.lookup("#postanskiBrojField").queryAs(TextField.class);
         bg = ime.getBackground();
         colorFound = false;
@@ -322,6 +329,14 @@ class VlasnikControllerTest {
 
         // Sve validno, prozor se zatvara
         robot.clickOn("#okButton");
+
+        // Dajemo vremena da se validira poštanski broj
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         assertFalse(theStage.isShowing());
 
         // Da li je novi vlasnik u bazi
