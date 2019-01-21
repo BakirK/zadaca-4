@@ -237,7 +237,7 @@ class VozilaDAOXMLTest {
         // Ovo će vratiti abecedno, tako da će Hyundai biti na indeksu 1 (poslije Ford a prije Renault)
         assertEquals("Hyundai", proizvodjaci.get(1).getNaziv());
         // Trebao bi dobiti Id 4
-        assertEquals(4, proizvodjaci.get(3).getId());
+        assertEquals(4, proizvodjaci.get(1).getId());
     }
 
     @Test
@@ -262,7 +262,7 @@ class VozilaDAOXMLTest {
         // Ovo će vratiti abecedno, tako da će Hyundai biti na indeksu 1 (poslije Ford a prije Renault)
         assertEquals("Hyundai", proizvodjaci.get(1).getNaziv());
         // Trebao bi dobiti Id 4
-        assertEquals(4, proizvodjaci.get(3).getId());
+        assertEquals(4, proizvodjaci.get(1).getId());
     }
 
     @Test

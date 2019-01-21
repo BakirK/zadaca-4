@@ -311,8 +311,9 @@ class GlavnaTest {
         // Mostar je i dalje u bazi
         ObservableList<Mjesto> mjesta = mydao.getMjesta();
         assertEquals(3, mjesta.size());
-        assertEquals("Mostar", mjesta.get(2).getNaziv());
-        assertEquals("88000", mjesta.get(2).getPostanskiBroj());
+        // Ovo će vratiti abecedno, tako da će Mostar biti na indeksu 0 (prije Tuzle i Sarajeva)
+        assertEquals("Mostar", mjesta.get(0).getNaziv());
+        assertEquals("88000", mjesta.get(0).getPostanskiBroj());
         mydao.close();
 
         // Vraćam se na Db
