@@ -160,6 +160,7 @@ class VlasnikControllerTest {
         robot.clickOn("#datumField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("1/1/2018");
+        robot.press(KeyCode.ENTER).release(KeyCode.ENTER);
 
         robot.clickOn("#okButton");
 
@@ -237,6 +238,7 @@ class VlasnikControllerTest {
     public void testJmbgValidacija (FxRobot robot) {
         robot.clickOn("#datumField");
         robot.write("1/8/2003");
+        robot.press(KeyCode.ENTER).release(KeyCode.ENTER);
 
         robot.clickOn("#jmbgField");
         robot.write("1234");
@@ -306,6 +308,7 @@ class VlasnikControllerTest {
         robot.write("f");
         robot.clickOn("#datumField");
         robot.write("1/8/2003");
+        robot.press(KeyCode.ENTER).release(KeyCode.ENTER);
         robot.clickOn("#jmbgField");
         robot.write("0801003500007");
 
