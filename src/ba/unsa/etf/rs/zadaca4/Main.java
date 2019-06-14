@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr.zadaca3;
+package ba.unsa.etf.rs.zadaca4;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/glavna.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         primaryStage.setTitle("Auto-moto klub");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();

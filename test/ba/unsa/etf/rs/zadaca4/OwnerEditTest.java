@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr.zadaca3;
+package ba.unsa.etf.rs.zadaca4;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -7,12 +7,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,16 +28,16 @@ import java.nio.file.Files;
 import java.time.LocalDate;
 
 @ExtendWith(ApplicationExtension.class)
-public class VlasnikEditTest {
+public class OwnerEditTest {
     Stage theStage;
-    VozilaDAO dao;
-    VlasnikController controller;
+    VehicleDAO dao;
+    OwnerController controller;
 
     @Start
     public void start (Stage stage) throws Exception {
-        File dbfile = new File("vozila.db");
+        File dbfile = new File("vehicles.db");
         ClassLoader classLoader = getClass().getClassLoader();
-        File srcfile = new File(classLoader.getResource("db/vozila.db").getFile());
+        File srcfile = new File(classLoader.getResource("db/vehicles.db").getFile());
         try {
             dbfile.delete();
             Files.copy(srcfile.toPath(), dbfile.toPath());
@@ -48,23 +46,23 @@ public class VlasnikEditTest {
             fail("Ne mogu kreirati bazu");
         }
 
-        dao = new VozilaDAOBaza();
+        dao = new VehicleDAOBase();
 
         // Dodajemo novog vlasnika
-        Mjesto sarajevo = new Mjesto(1, "Sarajevo", "71000");
-        Vlasnik testTestovic = new Vlasnik(0, "Test", "Testović", "Te", LocalDate.now(), sarajevo,
+        Place sarajevo = new Place(1, "Sarajevo", "71000");
+        Owner testTestovic = new Owner(0, "Test", "Testović", "Te", LocalDate.now(), sarajevo,
                 "Zmaja od Bosne bb", sarajevo, "1234567890");
-        dao.dodajVlasnika(testTestovic);
+        dao.addOwner(testTestovic);
 
         // Detaljna provjera dodavanja bi trebala biti urađena u testu dodajVlasnika()
-        ObservableList<Vlasnik> vlasnici = dao.getVlasnici();
-        testTestovic = vlasnici.get(1);
+        ObservableList<Owner> owners = dao.getOwners();
+        testTestovic = owners.get(1);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vlasnik.fxml"));
-        VlasnikController vlasnikController = new VlasnikController(dao, testTestovic);
-        loader.setController(vlasnikController);
+        OwnerController ownerController = new OwnerController(dao, testTestovic);
+        loader.setController(ownerController);
         Parent root = loader.load();
-        stage.setTitle("Vlasnik");
+        stage.setTitle("Owner");
         stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
         stage.setResizable(false);
         stage.show();
@@ -82,7 +80,7 @@ public class VlasnikEditTest {
 
     @Test
     public void testOk (FxRobot robot) {
-        robot.clickOn("#imeField");
+        robot.clickOn("#nameField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.press(KeyCode.DELETE).release(KeyCode.DELETE);
 
@@ -90,8 +88,8 @@ public class VlasnikEditTest {
         // Forma nije validna i neće se zatvoriti!
         assertTrue(theStage.isShowing());
 
-        TextField ime = robot.lookup("#imeField").queryAs(TextField.class);
-        Background bg = ime.getBackground();
+        TextField name = robot.lookup("#nameField").queryAs(TextField.class);
+        Background bg = name.getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
@@ -100,43 +98,43 @@ public class VlasnikEditTest {
     }
 
     @Test
-    public void testImeValidacija (FxRobot robot) {
+    public void testNameValidation (FxRobot robot) {
         // Ovim testom provjeravamo sva polja čiji je uslov validnosti da polje nije prazno
-        robot.clickOn("#imeField");
+        robot.clickOn("#nameField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.press(KeyCode.DELETE).release(KeyCode.DELETE);
 
-        robot.clickOn("#prezimeField");
+        robot.clickOn("#surnameField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("d");
-        robot.clickOn("#imeRoditeljaField");
+        robot.clickOn("#parentNameField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("e");
-        robot.clickOn("#adresaField");
+        robot.clickOn("#addressField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("f");
 
         robot.clickOn("#okButton");
         // Forma nije validna i neće se zatvoriti!
 
-        TextField ime = robot.lookup("#prezimeField").queryAs(TextField.class);
-        Background bg = ime.getBackground();
+        TextField surname = robot.lookup("#surnameField").queryAs(TextField.class);
+        Background bg = surname.getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("adff2f"))
                 colorFound = true;
         assertTrue(colorFound);
 
-        ime = robot.lookup("#imeRoditeljaField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        surname = robot.lookup("#parentNameField").queryAs(TextField.class);
+        bg = surname.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("adff2f"))
                 colorFound = true;
         assertTrue(colorFound);
 
-        ime = robot.lookup("#adresaField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        surname = robot.lookup("#addressField").queryAs(TextField.class);
+        bg = surname.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("adff2f"))
@@ -146,8 +144,8 @@ public class VlasnikEditTest {
     }
 
     @Test
-    public void testDatumValidacija (FxRobot robot) {
-        robot.clickOn("#datumField");
+    public void testDateValidation (FxRobot robot) {
+        robot.clickOn("#dateField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("1/1/2020");
         robot.press(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -155,26 +153,26 @@ public class VlasnikEditTest {
         robot.clickOn("#okButton");
         assertTrue(theStage.isShowing());
 
-        DatePicker ime = robot.lookup("#datumField").queryAs(DatePicker.class);
-        Background bg = ime.getEditor().getBackground();
+        DatePicker date = robot.lookup("#dateField").queryAs(DatePicker.class);
+        Background bg = date.getEditor().getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
                 colorFound = true;
         assertTrue(colorFound);
 
-        robot.clickOn("#datumField");
+        robot.clickOn("#dateField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("1/1/2018");
         robot.press(KeyCode.ENTER).release(KeyCode.ENTER);
-        robot.clickOn("#imeField");
+        robot.clickOn("#nameField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.press(KeyCode.DELETE).release(KeyCode.DELETE);
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#datumField").queryAs(DatePicker.class);
-        bg = ime.getEditor().getBackground();
+        date = robot.lookup("#dateField").queryAs(DatePicker.class);
+        bg = date.getEditor().getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("adff2f"))
@@ -183,15 +181,15 @@ public class VlasnikEditTest {
     }
 
     @Test
-    public void testBrisanjeMjesta (FxRobot robot) {
-        robot.clickOn("#adresaMjesto");
+    public void testDeletePlace (FxRobot robot) {
+        robot.clickOn("#addressPlace");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.press(KeyCode.DELETE).release(KeyCode.DELETE);
 
         robot.clickOn("#okButton");
         assertTrue(theStage.isShowing());
 
-        ComboBox ime = robot.lookup("#adresaMjesto").queryAs(ComboBox.class);
+        ComboBox ime = robot.lookup("#addressPlace").queryAs(ComboBox.class);
         Background bg = ime.getEditor().getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills())
@@ -201,8 +199,8 @@ public class VlasnikEditTest {
     }
 
     @Test
-    public void testJmbgValidacija (FxRobot robot) {
-        robot.clickOn("#datumField");
+    public void testJmbgValidation (FxRobot robot) {
+        robot.clickOn("#dateField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("1/8/2003");
         robot.press(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -214,8 +212,8 @@ public class VlasnikEditTest {
         robot.clickOn("#okButton");
         assertTrue(theStage.isShowing());
 
-        TextField ime = robot.lookup("#jmbgField").queryAs(TextField.class);
-        Background bg = ime.getBackground();
+        TextField jmbg = robot.lookup("#jmbgField").queryAs(TextField.class);
+        Background bg = jmbg.getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
@@ -228,8 +226,8 @@ public class VlasnikEditTest {
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#jmbgField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        jmbg = robot.lookup("#jmbgField").queryAs(TextField.class);
+        bg = jmbg.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
@@ -242,8 +240,8 @@ public class VlasnikEditTest {
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#jmbgField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        jmbg = robot.lookup("#jmbgField").queryAs(TextField.class);
+        bg = jmbg.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
@@ -259,8 +257,8 @@ public class VlasnikEditTest {
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#jmbgField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        jmbg = robot.lookup("#jmbgField").queryAs(TextField.class);
+        bg = jmbg.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("adff2f"))
@@ -269,19 +267,19 @@ public class VlasnikEditTest {
     }
 
     @Test
-    public void testPromjena (FxRobot robot) {
-        robot.clickOn("#imeField");
+    public void testChange (FxRobot robot) {
+        robot.clickOn("#nameField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("abc");
 
-        robot.clickOn("#adresaMjesto");
+        robot.clickOn("#addressPlace");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("Zenica");
 
-        robot.clickOn("#postanskiBrojField");
+        robot.clickOn("#postalNumberField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("75000");
-        robot.clickOn("#datumField");
+        robot.clickOn("#dateField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("1/8/2003");
         robot.press(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -294,21 +292,21 @@ public class VlasnikEditTest {
         assertFalse(theStage.isShowing());
 
         // Da li je novi vlasnik u bazi
-        ObservableList<Vlasnik> vlasnici = dao.getVlasnici();
-        assertEquals(2, vlasnici.size());
-        assertEquals(2, vlasnici.get(1).getId());
-        assertEquals("abc", vlasnici.get(1).getIme());
-        assertEquals("Testović", vlasnici.get(1).getPrezime());
-        assertEquals(LocalDate.of(2003,1,8), vlasnici.get(1).getDatumRodjenja());
-        assertEquals("0801003500007", vlasnici.get(1).getJmbg());
-        assertEquals("Zenica", vlasnici.get(1).getMjestoPrebivalista().getNaziv());
-        assertEquals(3, vlasnici.get(1).getMjestoPrebivalista().getId());
+        ObservableList<Owner> owners = dao.getOwners();
+        assertEquals(2, owners.size());
+        assertEquals(2, owners.get(1).getId());
+        assertEquals("abc", owners.get(1).getName());
+        assertEquals("Testović", owners.get(1).getSurname());
+        assertEquals(LocalDate.of(2003,1,8), owners.get(1).getDateOfBirth());
+        assertEquals("0801003500007", owners.get(1).getJmbg());
+        assertEquals("Zenica", owners.get(1).getLivingPlace().getName());
+        assertEquals(3, owners.get(1).getLivingPlace().getId());
 
         // Provjeravamo da li je Zenica zaista dodata u mjesta
-        ObservableList<Mjesto> mjesta = dao.getMjesta();
-        assertEquals(3, mjesta.size());
-        assertEquals(3, mjesta.get(2).getId());
-        assertEquals("Zenica", mjesta.get(2).getNaziv());
-        assertEquals("75000", mjesta.get(2).getPostanskiBroj());
+        ObservableList<Place> places = dao.getPlaces();
+        assertEquals(3, places.size());
+        assertEquals(3, places.get(2).getId());
+        assertEquals("Zenica", places.get(2).getName());
+        assertEquals("75000", places.get(2).getPostalNumber());
     }
 }

@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr.zadaca3;
+package ba.unsa.etf.rs.zadaca4;
 
 import static org.junit.jupiter.api.Assertions.*;
 import javafx.application.Platform;
@@ -7,19 +7,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -28,20 +24,18 @@ import org.testfx.framework.junit5.Start;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDate;
 
 @ExtendWith(ApplicationExtension.class)
-class VoziloControllerTest {
+class VehicleControllerTest {
     Stage theStage;
-    VozilaDAO dao;
-    VoziloController controller;
+    VehicleDAO dao;
+    VehicleController controller;
 
     @Start
     public void start (Stage stage) throws Exception {
-        File dbfile = new File("vozila.db");
+        File dbfile = new File("vehicles.db");
         ClassLoader classLoader = getClass().getClassLoader();
-        File srcfile = new File(classLoader.getResource("db/vozila.db").getFile());
+        File srcfile = new File(classLoader.getResource("db/vehicles.db").getFile());
         try {
             dbfile.delete();
             Files.copy(srcfile.toPath(), dbfile.toPath());
@@ -50,21 +44,21 @@ class VoziloControllerTest {
             fail("Ne mogu kreirati bazu");
         }
 
-        dao = new VozilaDAOBaza();
+        dao = new VehicleDAOBaza();
 
         // Ovo bi trebalo da iskopira fajl iz resources u test-resources, a ipak radi i sa mavenom
-        File fxml = new File("resources/fxml/vozilo.fxml");
+        File fxml = new File("resources/fxml/vehicle.fxml");
         if (fxml.exists()) {
-            File rsrc = new File("test-resources/fxml/vozilo.fxml");
+            File rsrc = new File("test-resources/fxml/vehicle.fxml");
             if (rsrc.exists()) rsrc.delete();
             Files.copy(fxml.toPath(), rsrc.toPath());
         }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vozilo.fxml"));
-        VoziloController voziloController = new VoziloController(dao, null);
-        loader.setController(voziloController);
+        VehicleController vehicleController = new VehicleController(dao, null);
+        loader.setController(vehicleController);
         Parent root = loader.load();
-        stage.setTitle("Vozilo");
+        stage.setTitle("Vehicle");
         stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
         stage.setResizable(false);
         stage.show();
@@ -95,18 +89,18 @@ class VoziloControllerTest {
     }
 
     @Test
-    public void testModelValidacija (FxRobot robot) {
+    public void testModelValidation (FxRobot robot) {
         // Ovim testom provjeravamo sva polja čiji je uslov validnosti da polje nije prazno
         robot.clickOn("#modelField");
         robot.write("abc");
-        robot.clickOn("#brojSasijeField");
+        robot.clickOn("#chasisNumberField");
         robot.write("d");
 
         robot.clickOn("#okButton");
         // Forma nije validna i neće se zatvoriti!
 
-        TextField ime = robot.lookup("#modelField").queryAs(TextField.class);
-        Background bg = ime.getBackground();
+        TextField model = robot.lookup("#modelField").queryAs(TextField.class);
+        Background bg = model.getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills()) {
             if (bf.getFill().toString().contains("adff2f"))
@@ -114,8 +108,8 @@ class VoziloControllerTest {
         }
         assertTrue(colorFound);
 
-        ime = robot.lookup("#brojSasijeField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        model = robot.lookup("#chasisNumberField").queryAs(TextField.class);
+        bg = model.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("adff2f"))
@@ -126,70 +120,70 @@ class VoziloControllerTest {
 
 
     @Test
-    public void testTablicaValidacija (FxRobot robot) {
-        robot.clickOn("#brojTablicaField");
+    public void testPlateValidation (FxRobot robot) {
+        robot.clickOn("#plateNumberField");
         robot.write("1234");
 
         robot.clickOn("#okButton");
 
-        TextField ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
-        Background bg = ime.getBackground();
+        TextField plateNumber = robot.lookup("#plateNumberField").queryAs(TextField.class);
+        Background bg = plateNumber.getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
                 colorFound = true;
         assertTrue(colorFound);
 
-        robot.clickOn("#brojTablicaField");
+        robot.clickOn("#plateNumberField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("A12345678");
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        plateNumber = robot.lookup("#plateNumberField").queryAs(TextField.class);
+        bg = plateNumber.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
                 colorFound = true;
         assertTrue(colorFound);
 
-        robot.clickOn("#brojTablicaField");
+        robot.clickOn("#plateNumberField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("A12-B-678"); // slovo B ne može
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        plateNumber = robot.lookup("#plateNumberField").queryAs(TextField.class);
+        bg = plateNumber.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
                 colorFound = true;
         assertTrue(colorFound);
 
-        robot.clickOn("#brojTablicaField");
+        robot.clickOn("#plateNumberField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("123-A-456");
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        plateNumber = robot.lookup("#plateNumberField").queryAs(TextField.class);
+        bg = plateNumber.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
                 colorFound = true;
         assertTrue(colorFound);
 
-        robot.clickOn("#brojTablicaField");
+        robot.clickOn("#plateNumberField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("M23-K-456");
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#brojTablicaField").queryAs(TextField.class);
-        bg = ime.getBackground();
+        plateNumber = robot.lookup("#plateNumberField").queryAs(TextField.class);
+        bg = plateNumber.getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("adff2f"))
@@ -198,9 +192,9 @@ class VoziloControllerTest {
     }
 
     @Test
-    public void testProizvodjac (FxRobot robot) {
-        ComboBox proizvodjacCombo = robot.lookup("#proizvodjacCombo").queryAs(ComboBox.class);
-        Platform.runLater(() -> proizvodjacCombo.show());
+    public void testManufacturer (FxRobot robot) {
+        ComboBox manufacturerCombo = robot.lookup("#manufacturerCombo").queryAs(ComboBox.class);
+        Platform.runLater(() -> manufacturerCombo.show());
 
         // Čekamo da se pojavi meni
         try {
@@ -213,22 +207,22 @@ class VoziloControllerTest {
 
         robot.clickOn("#okButton");
 
-        ComboBox ime = robot.lookup("#proizvodjacCombo").queryAs(ComboBox.class);
-        Background bg = ime.getEditor().getBackground();
+        ComboBox manufacturer = robot.lookup("#manufacturerCombo").queryAs(ComboBox.class);
+        Background bg = manufacturer.getEditor().getBackground();
         boolean colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("adff2f"))
                 colorFound = true;
         assertTrue(colorFound);
 
-        robot.clickOn("#proizvodjacCombo");
+        robot.clickOn("#manufacturerCombo");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.press(KeyCode.DELETE).release(KeyCode.DELETE);
 
         robot.clickOn("#okButton");
 
-        ime = robot.lookup("#proizvodjacCombo").queryAs(ComboBox.class);
-        bg = ime.getEditor().getBackground();
+        manufacturer = robot.lookup("#manufacturerCombo").queryAs(ComboBox.class);
+        bg = manufacturer.getEditor().getBackground();
         colorFound = false;
         for (BackgroundFill bf : bg.getFills())
             if (bf.getFill().toString().contains("ffb6c1"))
@@ -237,18 +231,18 @@ class VoziloControllerTest {
     }
 
     @Test
-    public void testDodavanje (FxRobot robot) {
-        robot.clickOn("#proizvodjacCombo");
+    public void testAdd (FxRobot robot) {
+        robot.clickOn("#manufacturer");
         robot.write("Skoda");
         robot.clickOn("#modelField");
         robot.write("Fabia");
-        robot.clickOn("#brojSasijeField");
+        robot.clickOn("#chasisNumberField");
         robot.write("1234193459845");
-        robot.clickOn("#brojTablicaField");
+        robot.clickOn("#plateNumberField");
         robot.write("M23-K-456");
 
-        ComboBox vlasnikCombo = robot.lookup("#vlasnikCombo").queryAs(ComboBox.class);
-        Platform.runLater(() -> vlasnikCombo.show());
+        ComboBox ownerCombo = robot.lookup("#ownerCombo").queryAs(ComboBox.class);
+        Platform.runLater(() -> ownerCombo.show());
 
         // Čekamo da se pojavi meni
         try {
@@ -263,19 +257,19 @@ class VoziloControllerTest {
         assertFalse(theStage.isShowing()); // Prozor se zatvorio
 
         // Da li je novo vozilo u bazi
-        ObservableList<Vozilo> vozila = dao.getVozila();
-        assertEquals(2, vozila.size());
-        assertEquals(2, vozila.get(1).getId());
-        assertEquals("Skoda", vozila.get(1).getProizvodjac().getNaziv());
-        assertEquals("Fabia", vozila.get(1).getModel());
-        assertEquals("1234193459845", vozila.get(1).getBrojSasije());
-        assertEquals("M23-K-456", vozila.get(1).getBrojTablica());
+        ObservableList<Vehicle> vehicles = dao.getVehicles();
+        assertEquals(2, vehicles.size());
+        assertEquals(2, vehicles.get(1).getId());
+        assertEquals("Skoda", vehicles.get(1).getManufacturer().getName());
+        assertEquals("Fabia", vehicles.get(1).getModel());
+        assertEquals("1234193459845", vehicles.get(1).getChasisNumber());
+        assertEquals("M23-K-456", vehicles.get(1).getPlateNumber());
 
         // Provjeravamo da li je Skoda zaista dodata u proizvodjace
-        ObservableList<Proizvodjac> proizvodjacs = dao.getProizvodjaci();
-        assertEquals(4, proizvodjacs.size());
+        ObservableList<Manufacturer> manufacturers = dao.getManufacturers();
+        assertEquals(4, manufacturers.size());
         // Ovo će vratiti abecedno, tako da će škoda biti na indeksu 2 (poslije Renault a prije Volskwagen)
-        assertEquals(4, proizvodjacs.get(2).getId());
-        assertEquals("Skoda", proizvodjacs.get(2).getNaziv());
+        assertEquals(4, manufacturers.get(2).getId());
+        assertEquals("Skoda", manufacturers.get(2).getName());
     }
 }

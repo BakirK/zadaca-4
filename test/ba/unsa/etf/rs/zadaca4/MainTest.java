@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr.zadaca3;
+package ba.unsa.etf.rs.zadaca4;
 
 import static org.junit.jupiter.api.Assertions.*;
 import javafx.application.Platform;
@@ -29,16 +29,16 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 
 @ExtendWith(ApplicationExtension.class)
-class GlavnaTest {
+class MainTest {
     Stage theStage;
-    VozilaDAO dao;
+    VehicleDAO dao;
     Controller controller;
 
     @Start
     public void start (Stage stage) throws Exception {
-        File dbfile = new File("vozila.db");
+        File dbfile = new File("vehicles.db");
         ClassLoader classLoader = getClass().getClassLoader();
-        File srcfile = new File(classLoader.getResource("db/vozila.db").getFile());
+        File srcfile = new File(classLoader.getResource("db/vehicles.db").getFile());
         try {
             dbfile.delete();
             Files.copy(srcfile.toPath(), dbfile.toPath());
@@ -48,26 +48,26 @@ class GlavnaTest {
         }
 
         try {
-            initFile("mjesta.xml");
-            initFile("proizvodjaci.xml");
-            initFile("vlasnici.xml");
-            initFile("vozila.xml");
+            initFile("places.xml");
+            initFile("manufacturers.xml");
+            initFile("owners.xml");
+            initFile("vehicles.xml");
         } catch (IOException e) {
             e.printStackTrace();
             fail("Ne mogu kreirati datoteku");
         }
 
-        dao = new VozilaDAOBaza();
+        dao = new VehicleDAOBase();
 
         // Ovo bi trebalo da iskopira fajl iz resources u test-resources, a ipak radi i sa mavenom
-        File fxml = new File("resources/fxml/glavna.fxml");
+        File fxml = new File("resources/fxml/main.fxml");
         if (fxml.exists()) {
-            File rsrc = new File("test-resources/fxml/glavna.fxml");
+            File rsrc = new File("test-resources/fxml/main.fxml");
             if (rsrc.exists()) rsrc.delete();
             Files.copy(fxml.toPath(), rsrc.toPath());
         }
 
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/glavna.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         stage.setTitle("Auto-moto klub");
         stage.setScene(new Scene(root, 800, 600));
         stage.show();
@@ -85,16 +85,16 @@ class GlavnaTest {
     }
 
     @Test
-    public void testRemoveVlasnik (FxRobot robot) {
-        robot.clickOn("#vlasniciTab");
-        robot.clickOn("#tabelaVlasnici");
+    public void testRemoveOwner (FxRobot robot) {
+        robot.clickOn("#ownersTab");
+        robot.clickOn("#tableOwners");
 
         // Selektujemo Mehu Mehića
         //robot.press(KeyCode.DOWN).release(KeyCode.DOWN);
         //robot.clickOn("#tabelaVlasnici");
         robot.clickOn("Meho Mehic");
 
-        robot.clickOn("#tbRemoveVlasnik");
+        robot.clickOn("#tbRemoveOwner");
 
         // Čekamo da dijalog postane vidljiv
         robot.lookup(".dialog-pane").tryQuery().isPresent();
@@ -116,33 +116,33 @@ class GlavnaTest {
         robot.clickOn(okButton);
 
         // Nije obrisan
-        ObservableList<Vlasnik> vlasnici = dao.getVlasnici();
-        assertEquals(1, vlasnici.size());
+        ObservableList<Owner> owners = dao.getOwners();
+        assertEquals(1, owners.size());
     }
 
     @Test
-    public void testAddRemoveVlasnik (FxRobot robot) {
-        robot.clickOn("#vlasniciTab");
-        robot.clickOn("#tbAddVlasnik");
+    public void testAddRemoveOwner (FxRobot robot) {
+        robot.clickOn("#ownersTab");
+        robot.clickOn("#tbAddOwner");
 
         // Čekamo da prozor postane vidljiv
-        robot.lookup("#imeField").tryQuery().isPresent();
-        robot.clickOn("#imeField");
+        robot.lookup("#nameField").tryQuery().isPresent();
+        robot.clickOn("#nameField");
         robot.write("abc");
-        robot.clickOn("#prezimeField");
+        robot.clickOn("#surnameField");
         robot.write("d");
-        robot.clickOn("#imeRoditeljaField");
+        robot.clickOn("#parentNameField");
         robot.write("e");
-        robot.clickOn("#adresaField");
+        robot.clickOn("#addressField");
         robot.write("f");
-        robot.clickOn("#datumField");
+        robot.clickOn("#dateField");
         robot.write("1/8/2003");
         robot.press(KeyCode.ENTER).release(KeyCode.ENTER);
         robot.clickOn("#jmbgField");
         robot.write("0801003500007");
 
-        ComboBox mjestoRodjenja = robot.lookup("#mjestoRodjenja").queryAs(ComboBox.class);
-        Platform.runLater(() -> mjestoRodjenja.show());
+        ComboBox placeOfBirth = robot.lookup("#placeOfBirth").queryAs(ComboBox.class);
+        Platform.runLater(() -> placeOfBirth.show());
 
         // Čekamo da se pojavi meni
         try {
@@ -153,38 +153,38 @@ class GlavnaTest {
 
         robot.clickOn("Sarajevo");
 
-        robot.clickOn("#adresaMjesto");
+        robot.clickOn("#addressPlace");
         robot.write("Mostar");
 
-        robot.clickOn("#postanskiBrojField");
+        robot.clickOn("#postalNumberField");
         robot.write("88000");
 
         // Sve validno, prozor se zatvara
         robot.clickOn("#okButton");
 
-        // Čekamo da se doda korisnik
+        // Čekamo da se doda vlasnik
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ObservableList<Vlasnik> vlasnici = dao.getVlasnici();
-        assertEquals(2, vlasnici.size());
-        assertEquals(2, vlasnici.get(1).getId());
-        assertEquals("abc", vlasnici.get(1).getIme());
-        assertEquals("Mostar", vlasnici.get(1).getMjestoPrebivalista().getNaziv());
+        ObservableList<Owner> owners = dao.getOwners();
+        assertEquals(2, owners.size());
+        assertEquals(2, owners.get(1).getId());
+        assertEquals("abc", owners.get(1).getName());
+        assertEquals("Mostar", owners.get(1).getLivingPlace().getName());
 
         // Brišemo vlasnika
-        robot.clickOn("#vlasniciTab");
-        robot.clickOn("#tabelaVlasnici");
+        robot.clickOn("#ownersTab");
+        robot.clickOn("#tableOwners");
 
         // Selektujemo Mehu Mehića
         robot.press(KeyCode.DOWN).release(KeyCode.DOWN);
         robot.press(KeyCode.DOWN).release(KeyCode.DOWN);
-        robot.clickOn("#tabelaVlasnici");
+        robot.clickOn("#tableOwners");
 
-        robot.clickOn("#tbRemoveVlasnik");
+        robot.clickOn("#tbRemoveOwner");
 
         // Čekamo da dijalog postane vidljiv
         robot.lookup(".dialog-pane").tryQuery().isPresent();
@@ -194,7 +194,7 @@ class GlavnaTest {
         Button okButton = (Button) dialogPane.lookupButton(ButtonType.OK);
         robot.clickOn(okButton);
 
-        // Čekamo da se obriše korisnik
+        // Čekamo da se obriše vlasnik
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -202,45 +202,45 @@ class GlavnaTest {
         }
 
         // Obrisan
-        ObservableList<Vlasnik> vlasnici2 = dao.getVlasnici();
-        assertEquals(1, vlasnici2.size());
-        assertEquals("Meho", vlasnici2.get(0).getIme());
+        ObservableList<Owner> owners2 = dao.getOwners();
+        assertEquals(1, owners2.size());
+        assertEquals("Meho", owners2.get(0).getName());
 
         // Mostar je i dalje u bazi
-        ObservableList<Mjesto> mjesta = dao.getMjesta();
-        assertEquals(3, mjesta.size());
+        ObservableList<Place> places = dao.getPlaces();
+        assertEquals(3, places.size());
         // Ovo će vratiti abecedno, tako da će Mostar biti na indeksu 0 (prije Tuzle i Sarajeva)
-        assertEquals("Mostar", mjesta.get(0).getNaziv());
-        assertEquals("88000", mjesta.get(0).getPostanskiBroj());
+        assertEquals("Mostar", places.get(0).getName());
+        assertEquals("88000", places.get(0).getPostalNumber());
     }
 
     @Test
-    public void testAddRemoveVlasnikXml (FxRobot robot) {
+    public void testAddRemoveOwnerXml (FxRobot robot) {
         // Prebacujemo na Xml
-        robot.clickOn("#menuOpcije");
+        robot.clickOn("#menuOptions");
         robot.clickOn("#menuXml");
 
-        robot.clickOn("#vlasniciTab");
-        robot.clickOn("#tbAddVlasnik");
+        robot.clickOn("#ownersTab");
+        robot.clickOn("#tbAddOwner");
 
         // Čekamo da prozor postane vidljiv
-        robot.lookup("#imeField").tryQuery().isPresent();
-        robot.clickOn("#imeField");
+        robot.lookup("#nameField").tryQuery().isPresent();
+        robot.clickOn("#nameField");
         robot.write("abc");
-        robot.clickOn("#prezimeField");
+        robot.clickOn("#surnameField");
         robot.write("d");
-        robot.clickOn("#imeRoditeljaField");
+        robot.clickOn("#parentNameField");
         robot.write("e");
-        robot.clickOn("#adresaField");
+        robot.clickOn("#addressField");
         robot.write("f");
-        robot.clickOn("#datumField");
+        robot.clickOn("#dateField");
         robot.write("1/8/2003");
         robot.press(KeyCode.ENTER).release(KeyCode.ENTER);
         robot.clickOn("#jmbgField");
         robot.write("0801003500007");
 
-        ComboBox mjestoRodjenja = robot.lookup("#mjestoRodjenja").queryAs(ComboBox.class);
-        Platform.runLater(() -> mjestoRodjenja.show());
+        ComboBox placeOfBirth = robot.lookup("#placeOfBirth").queryAs(ComboBox.class);
+        Platform.runLater(() -> placeOfBirth.show());
 
         // Čekamo da se pojavi meni
         try {
@@ -251,10 +251,10 @@ class GlavnaTest {
 
         robot.clickOn("Sarajevo");
 
-        robot.clickOn("#adresaMjesto");
+        robot.clickOn("#addressPlace");
         robot.write("Mostar");
 
-        robot.clickOn("#postanskiBrojField");
+        robot.clickOn("#postalNumberField");
         robot.write("88000");
 
         // Sve validno, prozor se zatvara
@@ -269,25 +269,25 @@ class GlavnaTest {
 
         // Provjerićemo broj vlasnika tako što ćemo napraviti posebnu instancu dao klase
         // (u nekim implementacijama bi ovo moglo pasti, ali ne pada mi na pamet kojim)
-        VozilaDAO mydao = new VozilaDAOXML();
+        VehicleDAO mydao = new VehicleDAOXML();
 
-        ObservableList<Vlasnik> vlasnici = mydao.getVlasnici();
-        assertEquals(2, vlasnici.size());
-        assertEquals(2, vlasnici.get(1).getId());
-        assertEquals("abc", vlasnici.get(1).getIme());
-        assertEquals("Mostar", vlasnici.get(1).getMjestoPrebivalista().getNaziv());
+        ObservableList<Owner> owners = mydao.getOwners();
+        assertEquals(2, owners.size());
+        assertEquals(2, owners.get(1).getId());
+        assertEquals("abc", owners.get(1).getName());
+        assertEquals("Mostar", owners.get(1).getLivingPlace().getName());
         mydao.close();
 
         // Brišemo vlasnika
-        robot.clickOn("#vlasniciTab");
-        robot.clickOn("#tabelaVlasnici");
+        robot.clickOn("#ownersTab");
+        robot.clickOn("#tableOwners");
 
         // Selektujemo Mehu Mehića
         robot.press(KeyCode.DOWN).release(KeyCode.DOWN);
         robot.press(KeyCode.DOWN).release(KeyCode.DOWN);
-        robot.clickOn("#tabelaVlasnici");
+        robot.clickOn("#tableOwners");
 
-        robot.clickOn("#tbRemoveVlasnik");
+        robot.clickOn("#tbRemoveOwner");
 
         // Čekamo da dijalog postane vidljiv
         robot.lookup(".dialog-pane").tryQuery().isPresent();
@@ -297,7 +297,7 @@ class GlavnaTest {
         Button okButton = (Button) dialogPane.lookupButton(ButtonType.OK);
         robot.clickOn(okButton);
 
-        // Čekamo da se obriše korisnik
+        // Čekamo da se obriše vlasnik
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -305,47 +305,47 @@ class GlavnaTest {
         }
 
         // Obrisan
-        mydao = new VozilaDAOXML();
-        ObservableList<Vlasnik> vlasnici2 = mydao.getVlasnici();
-        assertEquals(1, vlasnici2.size());
-        assertEquals("Meho", vlasnici2.get(0).getIme());
+        mydao = new VehicleDAOXML();
+        ObservableList<Owner> owners2 = mydao.getOwners();
+        assertEquals(1, owners2.size());
+        assertEquals("Meho", owners2.get(0).getName());
 
         // Mostar je i dalje u bazi
-        ObservableList<Mjesto> mjesta = mydao.getMjesta();
-        assertEquals(3, mjesta.size());
+        ObservableList<Place> places = mydao.getPlaces();
+        assertEquals(3, places.size());
         // Ovo će vratiti abecedno, tako da će Mostar biti na indeksu 0 (prije Tuzle i Sarajeva)
-        assertEquals("Mostar", mjesta.get(0).getNaziv());
-        assertEquals("88000", mjesta.get(0).getPostanskiBroj());
+        assertEquals("Mostar", places.get(0).getName());
+        assertEquals("88000", places.get(0).getPostalNumber());
         mydao.close();
 
         // Vraćam se na Db
-        robot.clickOn("#menuOpcije");
+        robot.clickOn("#menuOptions");
         robot.clickOn("#menuDb");
     }
 
     @Test
-    public void testRemoveVozilo (FxRobot robot) {
+    public void testRemoveVehicle (FxRobot robot) {
         dao.close();
 
-        robot.clickOn("#vozilaTab");
+        robot.clickOn("#vehicleTab");
 
         // Dodajemo vozilo
-        robot.clickOn("#tbAddVozilo");
+        robot.clickOn("#tbAddVehicle");
 
         // Čekamo da se pojavi prozor
-        robot.lookup("#proizvodjacCombo").tryQuery().isPresent();
+        robot.lookup("#manufacturerCombo").tryQuery().isPresent();
 
-        robot.clickOn("#proizvodjacCombo");
+        robot.clickOn("#manufacturerCombo");
         robot.write("Skoda");
         robot.clickOn("#modelField");
         robot.write("Fabia");
-        robot.clickOn("#brojSasijeField");
+        robot.clickOn("#chasisNumberField");
         robot.write("1234193459845");
-        robot.clickOn("#brojTablicaField");
+        robot.clickOn("#plateNumberField");
         robot.write("M23-K-456");
 
-        ComboBox vlasnikCombo = robot.lookup("#vlasnikCombo").queryAs(ComboBox.class);
-        Platform.runLater(() -> vlasnikCombo.show());
+        ComboBox ownerCombo = robot.lookup("#ownerCombo").queryAs(ComboBox.class);
+        Platform.runLater(() -> ownerCombo.show());
 
         // Čekamo da se pojavi meni
         try {
@@ -366,24 +366,24 @@ class GlavnaTest {
         }
 
         // Da li je dodano
-        dao = new VozilaDAOBaza();
-        ObservableList<Vozilo> vozila = dao.getVozila();
+        dao = new VehicleDAOBase();
+        ObservableList<Vehicle> vehicles = dao.getVehicles();
         dao.close();
-        assertEquals(2, vozila.size());
-        assertEquals("Skoda", vozila.get(1).getProizvodjac().getNaziv());
-        assertEquals("Fabia", vozila.get(1).getModel());
-        assertEquals("1234193459845", vozila.get(1).getBrojSasije());
-        assertEquals("M23-K-456", vozila.get(1).getBrojTablica());
-        assertEquals("Mehic", vozila.get(1).getVlasnik().getPrezime());
+        assertEquals(2, vehicles.size());
+        assertEquals("Skoda", vehicles.get(1).getManufacturer().getNaziv());
+        assertEquals("Fabia", vehicles.get(1).getModel());
+        assertEquals("1234193459845", vehicles.get(1).getChasisNumber());
+        assertEquals("M23-K-456", vehicles.get(1).getPlateNumber());
+        assertEquals("Mehic", vehicles.get(1).getOwner().getSurname());
 
-        robot.clickOn("#tabelaVozila");
+        robot.clickOn("#tableVehicles");
 
         // Selektujemo Škodu
         robot.press(KeyCode.DOWN).release(KeyCode.DOWN);
         robot.press(KeyCode.DOWN).release(KeyCode.DOWN);
-        robot.clickOn("#tabelaVozila");
+        robot.clickOn("#tableVehicles");
 
-        robot.clickOn("#tbRemoveVozilo");
+        robot.clickOn("#tbRemoveVehicle");
 
         // Čekamo da dijalog postane vidljiv
         robot.lookup(".dialog-pane").tryQuery().isPresent();
@@ -401,9 +401,9 @@ class GlavnaTest {
         }
 
         // Nije obrisan
-        dao = new VozilaDAOBaza();
-        ObservableList<Vozilo> vozila2 = dao.getVozila();
-        assertEquals(1, vozila2.size());
-        assertEquals("Golf", vozila.get(0).getModel());
+        dao = new VehicleDAOBase();
+        ObservableList<Vehicle> vehicles2 = dao.getVehicles();
+        assertEquals(1, vehicles2.size());
+        assertEquals("Golf", vehicles2.get(0).getModel());
     }
 }

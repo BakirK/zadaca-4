@@ -2,52 +2,52 @@
 <java version="1.8.0_191" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
   <void method="add">
-   <object class="ba.unsa.etf.rpr.zadaca3.Vlasnik">
-    <void property="adresaPrebivalista">
+   <object class="ba.unsa.etf.rs.zadaca4.Owner">
+    <void property="livingAddress">
      <string>Zmaja od Bosne bb</string>
     </void>
-    <void property="datumRodjenjaDani">
+    <void property="dateOfBirthDays">
      <long>1</long>
     </void>
     <void property="id">
      <int>1</int>
     </void>
-    <void property="ime">
+    <void property="name">
      <string>Meho</string>
     </void>
-    <void property="imeRoditelja">
+    <void property="parentName">
      <string>Mehaga</string>
     </void>
     <void property="jmbg">
      <string>123453452345</string>
     </void>
-    <void property="mjestoPrebivalista">
-     <object class="ba.unsa.etf.rpr.zadaca3.Mjesto">
+    <void property="livingPlace">
+     <object class="ba.unsa.etf.rs.zadaca4.Place">
       <void property="id">
        <int>1</int>
       </void>
-      <void property="naziv">
+      <void property="name">
        <string>Sarajevo</string>
       </void>
-      <void property="postanskiBroj">
+      <void property="postalNumber">
        <string>71000</string>
       </void>
      </object>
     </void>
-    <void property="mjestoRodjenja">
-     <object class="ba.unsa.etf.rpr.zadaca3.Mjesto">
+    <void property="placeOfBirth">
+     <object class="ba.unsa.etf.rs.zadaca4.Place">
       <void property="id">
        <int>1</int>
       </void>
-      <void property="naziv">
+      <void property="name">
        <string>Sarajevo</string>
       </void>
-      <void property="postanskiBroj">
+      <void property="postalNumber">
        <string>71000</string>
       </void>
      </object>
     </void>
-    <void property="prezime">
+    <void property="surname">
      <string>Mehic</string>
     </void>
    </object>
