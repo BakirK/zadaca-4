@@ -11,7 +11,8 @@ public class VehicleDAOBase implements VehicleDAO {
     private static VehicleDAOBase instance = null;
     private Connection connection;
     private PreparedStatement getOwnersStatement, getPlaceStatement, getVehiclesStatement,
-        getManufacturerStatement, getManufacturersStatement, getOwnerStatement, getPlacesStatement;
+        getManufacturerStatement, getManufacturersStatement, getOwnerStatement, getPlacesStatement,
+            updateOwnerStatement, addPlaceStatement, getMaxPlaceIdStatement;
 
 
     public VehicleDAOBase() {
@@ -24,22 +25,29 @@ public class VehicleDAOBase implements VehicleDAO {
 
             getOwnersStatement = connection.prepareStatement("SELECT id, name, surname, " +
                     "parent_name, date_od_birth, place_of_birth, living_address, living_place, jmbg " +
-                    "FROM owner ORDER BY id");
+                    "FROM owner ORDER BY id;");
 
             getVehiclesStatement = connection.prepareStatement("SELECT id, manufacturer, model," +
-                    "chasis_number, plate_number, owner FROM vehicle ORDER BY ID");
+                    "chasis_number, plate_number, owner FROM vehicle ORDER BY ID;");
 
-            getPlaceStatement = connection.prepareStatement("SELECT * FROM place WHERE id=?");
+            getPlaceStatement = connection.prepareStatement("SELECT * FROM place WHERE id=?;");
 
             getPlacesStatement = connection.prepareStatement("SELECT id, name, postal_number " +
-                            "FROM place ORDER BY name");
+                            "FROM place ORDER BY name;");
 
             getManufacturerStatement = connection.prepareStatement("SELECT * FROM manufacturer " +
-                    "WHERE id=?");
+                    "WHERE id=?;");
 
-            getManufacturersStatement = connection.prepareStatement("SELECT * FROM manufacturer ORDER BY name");
+            getManufacturersStatement = connection.prepareStatement("SELECT * FROM manufacturer " +
+                    "ORDER BY name;");
 
-            getOwnerStatement = connection.prepareStatement("SELECT * FROM owner WHERE id=?");
+            getOwnerStatement = connection.prepareStatement("SELECT * FROM owner WHERE id=?;");
+            updateOwnerStatement = connection.prepareStatement("UPDATE owner SET name=?, surname=?," +
+                    " parent_name=?, date_of_birth=?, place_of_birth=?, living_address=?, jmbg=? " +
+                    "WHERE id=?; COMMIT;");
+            addPlaceStatement = connection.prepareStatement("INSERT INTO place VALUES (?,?,?); COMMIT;");
+            getMaxPlaceIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM place;");
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -181,14 +189,52 @@ public class VehicleDAOBase implements VehicleDAO {
         return manufacturers;
     }
 
+    //TODO
     @Override
     public void addOwner(Owner owner) {
 
     }
 
+    private int addPlaceIfNotExists(Place p) {
+        int id = -16000;
+        try {
+            getPlaceStatement.setInt(1, p.getId());
+            ResultSet res = getPlaceStatement.executeQuery();
+            if(!res.next()) {
+                ResultSet temp = getMaxPlaceIdStatement.executeQuery();
+                id = temp.getInt(1);
+                addPlaceStatement.setInt(1, id);
+                addPlaceStatement.setString(2, p.getName());
+                addPlaceStatement.setString(3, p.getPostalNumber());
+                addPlaceStatement.executeUpdate();
+                p.setId(id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
     @Override
     public void changeOwner(Owner owner) {
-
+        try {
+            int id = addPlaceIfNotExists(owner.getPlaceOfBirth());
+            owner.getPlaceOfBirth().setId(id);
+            id = addPlaceIfNotExists(owner.getLivingPlace());
+            owner.getLivingPlace().setId(id);
+            updateOwnerStatement.setString(1, owner.getName());
+            updateOwnerStatement.setString(2, owner.getSurname());
+            updateOwnerStatement.setString(3, owner.getParentName());
+            updateOwnerStatement.setDate(4, Date.valueOf(owner.getDateOfBirth()));
+            updateOwnerStatement.setInt(5, owner.getPlaceOfBirth().getId());
+            updateOwnerStatement.setString(6, owner.getLivingAddress());
+            updateOwnerStatement.setInt(7, owner.getLivingPlace().getId());
+            updateOwnerStatement.setString(8, owner.getJmbg());
+            updateOwnerStatement.setInt(9, owner.getId());
+            updateOwnerStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
