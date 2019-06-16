@@ -125,7 +125,10 @@ public class VehicleDAOBase implements VehicleDAO {
         try {
             ResultSet res = getVehiclesStatement.executeQuery();
             while(res.next()) {
-
+                Manufacturer manufacturer = getManufacturer(res.getInt(2));
+                Owner owner = getOwner(res.getInt(6));
+                Vehicle vehicle = new Vehicle(res.getInt(1), manufacturer, res.getString(3),
+                        res.getString(4), res.getString(5), owner);
             }
         } catch (SQLException e) {
             e.printStackTrace();
