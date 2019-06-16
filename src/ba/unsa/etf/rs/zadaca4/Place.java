@@ -5,37 +5,37 @@ public class Place {
     private String name;
     private String postalNumber;
 
-    private Place(int id, String name, String postalNumber) {
+    public Place(int id, String name, String postalNumber) {
         this.id = id;
         this.name = name;
         this.postalNumber = postalNumber;
     }
 
-    private Place() {
+    public Place() {
     }
 
 
-    private int getId() {
+    public int getId() {
         return id;
     }
 
-    private void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    private String getName() {
+    public String getName() {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    private String getPostalNumber() {
+    public String getPostalNumber() {
         return postalNumber;
     }
 
-    private void setPostalNumber(String postalNumber) {
+    public void setPostalNumber(String postalNumber) {
         this.postalNumber = postalNumber;
     }
 
