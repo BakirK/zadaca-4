@@ -169,7 +169,7 @@ public class VehicleDAOBase implements VehicleDAO {
     public ObservableList<Manufacturer> getManufacturers() {
         ObservableList<Manufacturer> manufacturers = FXCollections.observableArrayList();
         try {
-            ResultSet res = getPlacesStatement.executeQuery();
+            ResultSet res = getManufacturersStatement.executeQuery();
             while(res.next()) {
                 Manufacturer manufacturer = new Manufacturer(res.getInt(1),
                         res.getString(2));
