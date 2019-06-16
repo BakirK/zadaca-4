@@ -6,7 +6,7 @@ public class Vehicle {
     private String model, chasisNumber, plateNumber;
     private Owner owner;
 
-    private Vehicle(int id, Manufacturer manufacturer, String model, String chasisNumber, String plateNumber, Owner owner) {
+    public Vehicle(int id, Manufacturer manufacturer, String model, String chasisNumber, String plateNumber, Owner owner) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -15,54 +15,54 @@ public class Vehicle {
         this.owner = owner;
     }
 
-    private Vehicle() {
+    public Vehicle() {
     }
 
-    private int getId() {
+    public int getId() {
         return id;
     }
 
-    private void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    private Manufacturer getManufacturer() {
+    public Manufacturer getManufacturer() {
         return manufacturer;
     }
 
-    private void setManufacturer(Manufacturer manufacturer) {
+    public void setManufacturer(Manufacturer manufacturer) {
         this.manufacturer = manufacturer;
     }
 
-    private String getModel() {
+    public String getModel() {
         return model;
     }
 
-    private void setModel(String model) {
+    public void setModel(String model) {
         this.model = model;
     }
 
-    private String getChasisNumber() {
+    public String getChasisNumber() {
         return chasisNumber;
     }
 
-    private void setChasisNumber(String chasisNumber) {
+    public void setChasisNumber(String chasisNumber) {
         this.chasisNumber = chasisNumber;
     }
 
-    private String getPlateNumber() {
+    public String getPlateNumber() {
         return plateNumber;
     }
 
-    private void setPlateNumber(String plateNumber) {
+    public void setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
     }
 
-    private Owner getOwner() {
+    public Owner getOwner() {
         return owner;
     }
 
-    private void setOwner(Owner owner) {
+    public void setOwner(Owner owner) {
         this.owner = owner;
     }
 }
