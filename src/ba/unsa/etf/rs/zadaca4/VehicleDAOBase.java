@@ -1,11 +1,9 @@
 package ba.unsa.etf.rs.zadaca4;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static sun.management.jmxremote.ConnectorBootstrap.initialize;
 
@@ -38,12 +36,9 @@ public class VehicleDAOBase implements VehicleDAO {
         }
         return instance;
     }
-
     private static void initialize() {
         instance = new VehicleDAOBase();
     }
-
-
     public static void deleteInstance() {
         if (instance != null) {
             try {
@@ -55,18 +50,39 @@ public class VehicleDAOBase implements VehicleDAO {
         instance = null;
     }
 
-
-
-
-
-
-
-
-
+    private Place getPlace(int id) {
+        Place place = null;
+        try {
+            getPlaceStatement.setInt(1, id);
+            ResultSet resultSet = getPlaceStatement.executeQuery();
+            while (resultSet.next()) {
+                place = new Place(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return place;
+    }
 
     @Override
     public ObservableList<Owner> getOwners() {
-        return null;
+        ObservableList<Owner> owners = FXCollections.observableArrayList();
+        try {
+            ResultSet res = getOwnersStatement.executeQuery();
+            while(res.next()) {
+                Owner owner = new Owner(res.getInt(1), res.getString(2),
+                        res.getString(3), res.getString(4),
+                        res.getDate(5).toLocalDate(), getPlace(res.getInt(6)),
+                        res.getString(7), getPlace(res.getInt(8)),
+                        res.getString(9));
+                owners.add(owner);
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return owners;
     }
 
     @Override
