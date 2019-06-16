@@ -11,7 +11,7 @@ public class Owner {
     private Place livingPlace;
     private String jmbg;
 
-    private Owner(int id, String name, String surname, String parentName, LocalDate dateOfBirth, Place placeOfBirth, String livingAddress, Place livingPlace, String jmbg) {
+    public Owner(int id, String name, String surname, String parentName, LocalDate dateOfBirth, Place placeOfBirth, String livingAddress, Place livingPlace, String jmbg) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -23,78 +23,78 @@ public class Owner {
         this.jmbg = jmbg;
     }
 
-    private Owner() {
+    public Owner() {
     }
 
-    private int getId() {
+    public int getId() {
         return id;
     }
 
-    private void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    private String getName() {
+    public String getName() {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    private String getSurname() {
+    public String getSurname() {
         return surname;
     }
 
-    private void setSurname(String surname) {
+    public void setSurname(String surname) {
         this.surname = surname;
     }
 
-    private String getParentName() {
+    public String getParentName() {
         return parentName;
     }
 
-    private void setParentName(String parentName) {
+    public void setParentName(String parentName) {
         this.parentName = parentName;
     }
 
-    private LocalDate getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    private void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    private Place getPlaceOfBirth() {
+    public Place getPlaceOfBirth() {
         return placeOfBirth;
     }
 
-    private void setPlaceOfBirth(Place placeOfBirth) {
+    public void setPlaceOfBirth(Place placeOfBirth) {
         this.placeOfBirth = placeOfBirth;
     }
 
-    private String getLivingAddress() {
+    public String getLivingAddress() {
         return livingAddress;
     }
 
-    private void setLivingAddress(String livingAddress) {
+    public void setLivingAddress(String livingAddress) {
         this.livingAddress = livingAddress;
     }
 
-    private Place getLivingPlace() {
+    public Place getLivingPlace() {
         return livingPlace;
     }
 
-    private void setLivingPlace(Place livingPlace) {
+    public void setLivingPlace(Place livingPlace) {
         this.livingPlace = livingPlace;
     }
 
-    private String getJmbg() {
+    public String getJmbg() {
         return jmbg;
     }
 
-    private void setJmbg(String jmbg) {
+    public void setJmbg(String jmbg) {
         this.jmbg = jmbg;
     }
 
