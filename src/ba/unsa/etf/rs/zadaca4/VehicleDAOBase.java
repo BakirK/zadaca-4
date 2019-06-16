@@ -3,6 +3,7 @@ package ba.unsa.etf.rs.zadaca4;
 import javafx.collections.ObservableList;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -11,7 +12,7 @@ import static sun.management.jmxremote.ConnectorBootstrap.initialize;
 public class VehicleDAOBase implements VehicleDAO {
     private static VehicleDAOBase instance = null;
     private Connection connection;
-    private PreparedStatement getOwnersStatement;
+    private PreparedStatement getOwnersStatement, getPlaceStatement;
 
 
     public VehicleDAOBase() {
@@ -19,7 +20,15 @@ public class VehicleDAOBase implements VehicleDAO {
     }
 
     private void prepareStatements() {
-
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:vehicles.db");
+            getOwnersStatement = connection.prepareStatement("SELECT id, name, surname, " +
+                    "parent_name, date_od_birth, place_of_birth, living_address, living_place, jmbg " +
+                    "FROM owner ORDER BY id");
+            getPlaceStatement = connection.prepareStatement("SELECT * FROM place WHERE id=?");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
