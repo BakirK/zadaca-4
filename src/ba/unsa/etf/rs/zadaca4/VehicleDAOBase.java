@@ -129,16 +129,17 @@ public class VehicleDAOBase implements VehicleDAO {
                 Owner owner = getOwner(res.getInt(6));
                 Vehicle vehicle = new Vehicle(res.getInt(1), manufacturer, res.getString(3),
                         res.getString(4), res.getString(5), owner);
+                vehicles.add(vehicle);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return null;
+        return vehicles;
     }
 
     @Override
     public ObservableList<Place> getPlaces() {
+        ObservableList<Owner> places = FXCollections.observableArrayList();
         return null;
     }
 
