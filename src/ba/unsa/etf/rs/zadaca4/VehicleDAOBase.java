@@ -11,7 +11,7 @@ public class VehicleDAOBase implements VehicleDAO {
     private static VehicleDAOBase instance = null;
     private Connection connection;
     private PreparedStatement getOwnersStatement, getPlaceStatement, getVehiclesStatement,
-        getManufacturerStatement, getOwnerStatement, getPlacesStatement;
+        getManufacturerStatement, getManufacturersStatement, getOwnerStatement, getPlacesStatement;
 
 
     public VehicleDAOBase() {
@@ -32,10 +32,12 @@ public class VehicleDAOBase implements VehicleDAO {
             getPlaceStatement = connection.prepareStatement("SELECT * FROM place WHERE id=?");
 
             getPlacesStatement = connection.prepareStatement("SELECT id, name, postal_number " +
-                            "FROM place ORDER BY id");
+                            "FROM place ORDER BY name");
 
             getManufacturerStatement = connection.prepareStatement("SELECT * FROM manufacturer " +
                     "WHERE id=?");
+
+            getManufacturersStatement = connection.prepareStatement("SELECT * FROM manufacturer ORDER BY name");
 
             getOwnerStatement = connection.prepareStatement("SELECT * FROM owner WHERE id=?");
 
@@ -165,7 +167,18 @@ public class VehicleDAOBase implements VehicleDAO {
 
     @Override
     public ObservableList<Manufacturer> getManufacturers() {
-        return null;
+        ObservableList<Manufacturer> manufacturers = FXCollections.observableArrayList();
+        try {
+            ResultSet res = getPlacesStatement.executeQuery();
+            while(res.next()) {
+                Manufacturer manufacturer = new Manufacturer(res.getInt(1),
+                        res.getString(2));
+                manufacturers.add(manufacturer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return manufacturers;
     }
 
     @Override
