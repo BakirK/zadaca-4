@@ -172,5 +172,15 @@
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_vozilo_1</UnderlyingIndexName>
     </key>
+    <foreign-key id="46" parent="10">
+      <ColNames>proizvodjac</ColNames>
+      <RefTableName>proizvodjac</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="47" parent="10">
+      <ColNames>vlasnik</ColNames>
+      <RefTableName>vlasnik</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
   </database-model>
 </dataSource>
