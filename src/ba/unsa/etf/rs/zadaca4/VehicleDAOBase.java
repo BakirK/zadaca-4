@@ -11,7 +11,7 @@ public class VehicleDAOBase implements VehicleDAO {
     private static VehicleDAOBase instance = null;
     private Connection connection;
     private PreparedStatement getOwnersStatement, getPlaceStatement, getVehiclesStatement,
-        getManufacturerStatement, getOwnerStatement;
+        getManufacturerStatement, getOwnerStatement, getPlacesStatement;
 
 
     public VehicleDAOBase() {
@@ -21,14 +21,24 @@ public class VehicleDAOBase implements VehicleDAO {
     private void prepareStatements() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:vehicles.db");
+
             getOwnersStatement = connection.prepareStatement("SELECT id, name, surname, " +
                     "parent_name, date_od_birth, place_of_birth, living_address, living_place, jmbg " +
                     "FROM owner ORDER BY id");
+
             getVehiclesStatement = connection.prepareStatement("SELECT id, manufacturer, model," +
                     "chasis_number, plate_number, owner FROM vehicle ORDER BY ID");
+
             getPlaceStatement = connection.prepareStatement("SELECT * FROM place WHERE id=?");
-            getManufacturerStatement = connection.prepareStatement("SELECT * FROM manufacturer WHERE id=?");
+
+            getPlacesStatement = connection.prepareStatement("SELECT id, name, postal_number " +
+                            "FROM place ORDER BY id");
+
+            getManufacturerStatement = connection.prepareStatement("SELECT * FROM manufacturer " +
+                    "WHERE id=?");
+
             getOwnerStatement = connection.prepareStatement("SELECT * FROM owner WHERE id=?");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -139,8 +149,9 @@ public class VehicleDAOBase implements VehicleDAO {
 
     @Override
     public ObservableList<Place> getPlaces() {
-        ObservableList<Owner> places = FXCollections.observableArrayList();
-        return null;
+        ObservableList<Place> places = FXCollections.observableArrayList();
+
+        return places;
     }
 
     @Override
