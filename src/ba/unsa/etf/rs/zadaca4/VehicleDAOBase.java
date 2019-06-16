@@ -10,7 +10,8 @@ import static sun.management.jmxremote.ConnectorBootstrap.initialize;
 public class VehicleDAOBase implements VehicleDAO {
     private static VehicleDAOBase instance = null;
     private Connection connection;
-    private PreparedStatement getOwnersStatement, getPlaceStatement;
+    private PreparedStatement getOwnersStatement, getPlaceStatement, getVehiclesStatement,
+        getManufacturerStatement, getOwnerStatement;
 
 
     public VehicleDAOBase() {
@@ -23,7 +24,11 @@ public class VehicleDAOBase implements VehicleDAO {
             getOwnersStatement = connection.prepareStatement("SELECT id, name, surname, " +
                     "parent_name, date_od_birth, place_of_birth, living_address, living_place, jmbg " +
                     "FROM owner ORDER BY id");
+            getVehiclesStatement = connection.prepareStatement("SELECT id, manufacturer, model," +
+                    "chasis_number, plate_number, owner FROM vehicle ORDER BY ID");
             getPlaceStatement = connection.prepareStatement("SELECT * FROM place WHERE id=?");
+            getManufacturerStatement = connection.prepareStatement("SELECT * FROM manufacturer WHERE id=?");
+            getOwnerStatement = connection.prepareStatement("SELECT * FROM owner WHERE id=?");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -76,9 +81,7 @@ public class VehicleDAOBase implements VehicleDAO {
                         res.getString(7), getPlace(res.getInt(8)),
                         res.getString(9));
                 owners.add(owner);
-
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -87,6 +90,8 @@ public class VehicleDAOBase implements VehicleDAO {
 
     @Override
     public ObservableList<Vehicle> getVehicles() {
+        ObservableList<Vehicle> vehicles = FXCollections.observableArrayList();
+
         return null;
     }
 
