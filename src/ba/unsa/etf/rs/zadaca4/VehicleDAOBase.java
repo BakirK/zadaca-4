@@ -150,7 +150,16 @@ public class VehicleDAOBase implements VehicleDAO {
     @Override
     public ObservableList<Place> getPlaces() {
         ObservableList<Place> places = FXCollections.observableArrayList();
-
+        try {
+            ResultSet res = getPlacesStatement.executeQuery();
+            while(res.next()) {
+                Place place = new Place(res.getInt(1),
+                        res.getString(2),res.getString(3));
+                places.add(place);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return places;
     }
 
