@@ -69,6 +69,37 @@ public class VehicleDAOBase implements VehicleDAO {
         return place;
     }
 
+    private Manufacturer getManufacturer(int id) {
+        Manufacturer manufacturer = null;
+        try {
+            getManufacturerStatement.setInt(1, id);
+            ResultSet resultSet = getManufacturerStatement.executeQuery();
+            while (resultSet.next()) {
+                manufacturer = new Manufacturer(resultSet.getInt(1), resultSet.getString(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return manufacturer;
+    }
+
+    private Owner getOwner(int id) {
+        Owner owner = null;
+        try {
+            getOwnerStatement.setInt(1, id);
+            ResultSet res = getOwnerStatement.executeQuery();
+            while (res.next()) {
+                owner = new Owner(res.getInt(1), res.getString(2),
+                        res.getString(3), res.getString(4),
+                        res.getDate(5).toLocalDate(), getPlace(res.getInt(6)),
+                        res.getString(7), getPlace(res.getInt(8)),
+                        res.getString(9));}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return owner;
+    }
+
     @Override
     public ObservableList<Owner> getOwners() {
         ObservableList<Owner> owners = FXCollections.observableArrayList();
@@ -91,6 +122,14 @@ public class VehicleDAOBase implements VehicleDAO {
     @Override
     public ObservableList<Vehicle> getVehicles() {
         ObservableList<Vehicle> vehicles = FXCollections.observableArrayList();
+        try {
+            ResultSet res = getVehiclesStatement.executeQuery();
+            while(res.next()) {
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         return null;
     }
