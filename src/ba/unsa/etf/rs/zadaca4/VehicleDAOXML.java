@@ -151,7 +151,6 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
         save();
         sort();
     }
-//TODO update u drugoj listi mjesto
     @Override
     public void changeOwner(Owner owner) {
         owner.getPlaceOfBirth().setId(addPlaceIfNotExists(owner.getPlaceOfBirth()));
@@ -171,7 +170,20 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
 
     @Override
     public void deleteOwner(Owner owner) {
+        for (int i = 0; i < vehicles.size(); i++) {
+            if(vehicles.get(i).getOwner().getId() == owner.getId()) {
+                throw new IllegalArgumentException("Owner has cars assinged to him");
+            }
+        }
 
+        for (int i = 0; i < owners.size(); i++) {
+            if(owners.get(i).getId() == owner.getId()) {
+                owners.remove(i);
+                break;
+            }
+        }
+        save();
+        sort();
     }
 
     @Override
