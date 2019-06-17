@@ -1,0 +1,32 @@
+.fieldCorrect {
+    -fx-control-inner-background: greenyellow;
+    -fx-background-color: greenyellow;
+}
+.fieldIncorrect {
+    -fx-control-inner-background: lightpink;
+    -fx-background-color: lightpink;
+}
+
+#tbAddOwner {
+    -fx-graphic: url("/icons/add.png");
+}
+
+#tbRemoveOwner {
+    -fx-graphic: url("/icons/delete.png");
+}
+
+#tbEditOwner {
+    -fx-graphic: url("/icons/edit.png");
+}
+
+#tbAddVehicle {
+    -fx-graphic: url("/icons/add.png");
+}
+
+#tbRemoveVehicle {
+    -fx-graphic: url("/icons/delete.png");
+}
+
+#tbEditVehicle {
+    -fx-graphic: url("/icons/edit.png");
+}
