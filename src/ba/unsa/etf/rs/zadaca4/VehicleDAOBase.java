@@ -14,7 +14,8 @@ public class VehicleDAOBase implements VehicleDAO {
         getManufacturerStatement, getManufacturersStatement, getOwnerStatement, getPlacesStatement,
             updateOwnerStatement, addPlaceStatement, getMaxPlaceIdStatement, addOwnerStatement,
             getMaxOwnerIdStatement, deleteOwnerStatement, getOwnerVehiclesStatement,
-            getMaxManufacturerIdStatement, addManufacturerStatement;
+            getMaxManufacturerIdStatement, addManufacturerStatement, addVehicleStatement,
+            getMaxVehicleIdStatement;
 
 
     public VehicleDAOBase() {
@@ -55,6 +56,8 @@ public class VehicleDAOBase implements VehicleDAO {
             getOwnerVehiclesStatement = connection.prepareStatement("SELECT * FROM vehicle WHERE owner=?;");
             deleteOwnerStatement = connection.prepareStatement("DELETE FROM owner WHERE id=?; COMMIT;");
             addManufacturerStatement = connection.prepareStatement("INSERT INTO manufacturer VALUES (?,?); COMMIT;");
+            addVehicleStatement = connection.prepareStatement("INSERT INTO vehicle VALUES(?,?,?,?,?,?); COMMIT;");
+            getMaxVehicleIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM vehicle;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -304,7 +307,29 @@ public class VehicleDAOBase implements VehicleDAO {
 
     @Override
     public void addVehicle(Vehicle vehicle) {
-
+        try {
+            //provjera da li postoji
+            getOwnerStatement.setInt(1, vehicle.getOwner().getId());
+            ResultSet res = getOwnerStatement.executeQuery();
+            if(!res.next()) {
+                throw new IllegalArgumentException("Owner does not exists");
+            }
+            int id = addManufacturerIfNotExists(vehicle.getManufacturer());
+            if(id != vehicle.getManufacturer().getId()) {
+                vehicle.getManufacturer().setId(id);
+            }
+            res = getMaxVehicleIdStatement.executeQuery();
+            vehicle.setId(res.getInt(1));
+            addVehicleStatement.setInt(1, vehicle.getId());
+            addVehicleStatement.setInt(2, vehicle.getManufacturer().getId());
+            addVehicleStatement.setString(3, vehicle.getModel());
+            addVehicleStatement.setString(4, vehicle.getChasisNumber());
+            addVehicleStatement.setString(5, vehicle.getPlateNumber());
+            addVehicleStatement.setInt(6, vehicle.getOwner().getId());
+            addVehicleStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
