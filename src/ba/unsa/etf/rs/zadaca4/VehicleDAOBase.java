@@ -12,7 +12,8 @@ public class VehicleDAOBase implements VehicleDAO {
     private Connection connection;
     private PreparedStatement getOwnersStatement, getPlaceStatement, getVehiclesStatement,
         getManufacturerStatement, getManufacturersStatement, getOwnerStatement, getPlacesStatement,
-            updateOwnerStatement, addPlaceStatement, getMaxPlaceIdStatement;
+            updateOwnerStatement, addPlaceStatement, getMaxPlaceIdStatement, addOwnerStatement,
+            getMaxOwnerIdStatement;
 
 
     public VehicleDAOBase() {
@@ -47,8 +48,8 @@ public class VehicleDAOBase implements VehicleDAO {
                     "WHERE id=?; COMMIT;");
             addPlaceStatement = connection.prepareStatement("INSERT INTO place VALUES (?,?,?); COMMIT;");
             getMaxPlaceIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM place;");
-
-
+            getMaxOwnerIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM owner;");
+            addOwnerStatement = connection.prepareStatement("INSERT INTO owner VALUES (?,?,?,?,?,?,?,?,?); COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -189,25 +190,48 @@ public class VehicleDAOBase implements VehicleDAO {
         return manufacturers;
     }
 
-    //TODO
     @Override
     public void addOwner(Owner owner) {
-
+        int id = addPlaceIfNotExists(owner.getLivingPlace());
+        if(id != owner.getLivingPlace().getId()) {
+            owner.getLivingPlace().setId(id);
+        }
+        id = addPlaceIfNotExists(owner.getPlaceOfBirth());
+        if(id != owner.getPlaceOfBirth().getId()) {
+            owner.getPlaceOfBirth().setId(id);
+        }
+        try {
+            ResultSet r = getMaxOwnerIdStatement.executeQuery();
+            id = r.getInt(1);
+            addOwnerStatement.setInt(1, id);
+            addOwnerStatement.setString(2, owner.getName());
+            addOwnerStatement.setString(3, owner.getSurname());
+            addOwnerStatement.setString(4, owner.getParentName());
+            addOwnerStatement.setDate( 5, Date.valueOf(owner.getDateOfBirth()));
+            addOwnerStatement.setInt( 6, owner.getPlaceOfBirth().getId());
+            addOwnerStatement.setString( 7, owner.getLivingAddress());
+            addOwnerStatement.setInt( 8, owner.getLivingPlace().getId());
+            addOwnerStatement.setString( 8, owner.getJmbg());
+            addOwnerStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private int addPlaceIfNotExists(Place p) {
-        int id = -16000;
+        int id = p.getId();
         try {
             getPlaceStatement.setInt(1, p.getId());
             ResultSet res = getPlaceStatement.executeQuery();
             if(!res.next()) {
                 ResultSet temp = getMaxPlaceIdStatement.executeQuery();
-                id = temp.getInt(1);
+                int idTemp = temp.getInt(1);
                 addPlaceStatement.setInt(1, id);
                 addPlaceStatement.setString(2, p.getName());
                 addPlaceStatement.setString(3, p.getPostalNumber());
                 addPlaceStatement.executeUpdate();
-                p.setId(id);
+                p.setId(idTemp);
+                id = idTemp;
             }
         } catch (SQLException e) {
             e.printStackTrace();
