@@ -1,6 +1,6 @@
 package ba.unsa.etf.rs.zadaca4;
 
-public class Manufacturer implements Comparable {
+public class Manufacturer implements Comparable<Manufacturer> {
     private int id;
     private String name;
 
@@ -32,8 +32,7 @@ public class Manufacturer implements Comparable {
     public String toString() { return name; }
 
     @Override
-    public int compareTo(Object o) {
-        Manufacturer m = (Manufacturer) o;
-        return this.name.compareTo(m.name);
+    public int compareTo(Manufacturer o) {
+        return this.name.compareTo(o.name);
     }
 }
