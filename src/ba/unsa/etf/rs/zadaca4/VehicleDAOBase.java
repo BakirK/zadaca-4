@@ -5,8 +5,6 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 
-import static sun.management.jmxremote.ConnectorBootstrap.initialize;
-
 public class VehicleDAOBase implements VehicleDAO {
     private static VehicleDAOBase instance = null;
     private Connection connection;
