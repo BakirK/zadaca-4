@@ -116,7 +116,7 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
         return FXCollections.observableArrayList(manufacturers);
     }
 
-    private void addPlaceIfNotExists(Place p) {
+    private int addPlaceIfNotExists(Place p) {
         boolean found = false;
         for(Place place: places) {
             if(place.getId() == p.getId()) {
@@ -124,9 +124,8 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
                 break;
             }
         }
-
+        int max = p.getId();
         if(!found) {
-            int max = 0;
             for(Place place: places) {
                 if(place.getId() > max) {
                     max = place.getId();
@@ -135,11 +134,12 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
             p.setId(max + 1);
             places.add(p);
         }
+        return max;
     }
     @Override
     public void addOwner(Owner owner) {
-        addPlaceIfNotExists(owner.getPlaceOfBirth());
-        addPlaceIfNotExists(owner.getLivingPlace());
+        owner.getPlaceOfBirth().setId(addPlaceIfNotExists(owner.getPlaceOfBirth()));
+        owner.getLivingPlace().setId(addPlaceIfNotExists(owner.getLivingPlace()));
         int max = 0;
         for(Owner o: owners) {
             if(o.getId() > max) {
@@ -148,11 +148,25 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
         }
         owner.setId(max + 1);
         owners.add(owner);
+        save();
+        sort();
     }
-
+//TODO update u drugoj listi mjesto
     @Override
     public void changeOwner(Owner owner) {
-
+        owner.getPlaceOfBirth().setId(addPlaceIfNotExists(owner.getPlaceOfBirth()));
+        owner.getLivingPlace().setId(addPlaceIfNotExists(owner.getLivingPlace()));
+        int index = -1;
+        for (int i = 0; i < owners.size(); i++) {
+            if(owners.get(i).getId() == owner.getId()) {
+                index = i;
+            }
+        }
+        if(index != -1) {
+            owners.set(index, owner);
+        }
+        save();
+        sort();
     }
 
     @Override
