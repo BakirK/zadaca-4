@@ -4,8 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -66,6 +68,28 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
 
             XMLdecoder = new XMLDecoder(new FileInputStream("vehicles.xml"));
             vehicles = (ArrayList<Vehicle>)XMLdecoder.readObject();
+            XMLdecoder.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void save() {
+        try {
+            XMLEncoder XMLdecoder = new XMLEncoder(new FileOutputStream("manufacturers.xml"));
+            XMLdecoder.writeObject(manufacturers);
+            XMLdecoder.close();
+
+            XMLdecoder = new XMLEncoder(new FileOutputStream("owners.xml"));
+            XMLdecoder.writeObject(owners);
+            XMLdecoder.close();
+
+            XMLdecoder = new XMLEncoder(new FileOutputStream("places.xml"));
+            XMLdecoder.writeObject(places);
+            XMLdecoder.close();
+
+            XMLdecoder = new XMLEncoder(new FileOutputStream("vehicles.xml"));
+            XMLdecoder.writeObject(vehicles);
             XMLdecoder.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
