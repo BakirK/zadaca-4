@@ -13,7 +13,8 @@ public class VehicleDAOBase implements VehicleDAO {
     private PreparedStatement getOwnersStatement, getPlaceStatement, getVehiclesStatement,
         getManufacturerStatement, getManufacturersStatement, getOwnerStatement, getPlacesStatement,
             updateOwnerStatement, addPlaceStatement, getMaxPlaceIdStatement, addOwnerStatement,
-            getMaxOwnerIdStatement, deleteOwnerStatement, getOwnerVehiclesStatement;
+            getMaxOwnerIdStatement, deleteOwnerStatement, getOwnerVehiclesStatement,
+            getMaxManufacturerIdStatement, addManufacturerStatement;
 
 
     public VehicleDAOBase() {
@@ -49,9 +50,11 @@ public class VehicleDAOBase implements VehicleDAO {
             addPlaceStatement = connection.prepareStatement("INSERT INTO place VALUES (?,?,?); COMMIT;");
             getMaxPlaceIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM place;");
             getMaxOwnerIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM owner;");
+            getMaxManufacturerIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM manufacturer;");
             addOwnerStatement = connection.prepareStatement("INSERT INTO owner VALUES (?,?,?,?,?,?,?,?,?); COMMIT;");
             getOwnerVehiclesStatement = connection.prepareStatement("SELECT * FROM vehicle WHERE owner=?;");
             deleteOwnerStatement = connection.prepareStatement("DELETE FROM owner WHERE id=?; COMMIT;");
+            addManufacturerStatement = connection.prepareStatement("INSERT INTO manufacturer VALUES (?,?); COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -235,6 +238,26 @@ public class VehicleDAOBase implements VehicleDAO {
                 p.setId(idTemp);
                 id = idTemp;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
+    private int addManufacturerIfNotExists(Manufacturer m) {
+        int id = m.getId();
+        try {
+            getManufacturerStatement.setInt(1, id);
+            ResultSet res = getManufacturerStatement.executeQuery();
+            if(!res.next()) {
+                res = getMaxManufacturerIdStatement.executeQuery();
+                id = res.getInt(1);
+                m.setId(id);
+                addManufacturerStatement.setInt(1, m.getId());
+                addManufacturerStatement.setString(2, m.getName());
+                addManufacturerStatement.executeUpdate();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
