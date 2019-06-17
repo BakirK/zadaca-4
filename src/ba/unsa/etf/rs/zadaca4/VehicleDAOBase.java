@@ -23,9 +23,9 @@ public class VehicleDAOBase implements VehicleDAO {
     private void prepareStatements() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:vehicles.db");
-
+            Class.forName("org.sqlite.JDBC");
             getOwnersStatement = connection.prepareStatement("SELECT id, name, surname, " +
-                    "parent_name, date_od_birth, place_of_birth, living_address, living_place, jmbg " +
+                    "parent_name, date_of_birth, place_of_birth, living_address, living_place, jmbg " +
                     "FROM owner ORDER BY id;");
 
             getVehiclesStatement = connection.prepareStatement("SELECT id, manufacturer, model," +
@@ -56,11 +56,13 @@ public class VehicleDAOBase implements VehicleDAO {
             addManufacturerStatement = connection.prepareStatement("INSERT INTO manufacturer VALUES (?,?); COMMIT;");
             addVehicleStatement = connection.prepareStatement("INSERT INTO vehicle VALUES(?,?,?,?,?,?); COMMIT;");
             getMaxVehicleIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM vehicle;");
-            updateVehicleStatement = connection.prepareStatement("UPDATE vehicle SET name=?, manufacturer=?," +
-                    " model=?, chasis_number=?, plate_number=?, owner=?, jmbg=? " +
+            updateVehicleStatement = connection.prepareStatement("UPDATE vehicle SET manufacturer=?," +
+                    " model=?, chasis_number=?, plate_number=?, owner=? " +
                     "WHERE id=?; COMMIT;");
             deleteVehicleStatement = connection.prepareStatement("DELETE FROM vehicle WHERE id=?; COMMIT;");
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
