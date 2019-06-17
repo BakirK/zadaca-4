@@ -1,8 +1,16 @@
 package ba.unsa.etf.rs.zadaca4;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.time.LocalDate;
 
 public class Owner implements Comparable<Owner> {
+    private final ReadOnlyStringWrapper theName = new ReadOnlyStringWrapper();
+
     private int id;
     private String name, surname, parentName;
     private LocalDate dateOfBirth;
@@ -12,6 +20,7 @@ public class Owner implements Comparable<Owner> {
     private String jmbg;
 
     public Owner(int id, String name, String surname, String parentName, LocalDate dateOfBirth, Place placeOfBirth, String livingAddress, Place livingPlace, String jmbg) {
+        theName.bind(Bindings.concat(name, " ", surname));
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -21,6 +30,14 @@ public class Owner implements Comparable<Owner> {
         this.livingAddress = livingAddress;
         this.livingPlace = livingPlace;
         this.jmbg = jmbg;
+    }
+
+    public ReadOnlyStringProperty theNameProperty() {
+        return theName.getReadOnlyProperty();
+    }
+
+    public final String getTheName() {
+        return theName.get();
     }
 
     public Owner() {
