@@ -39,6 +39,10 @@ public class MainController {
 
     @FXML
     private void useSQL(ActionEvent actionEvent) {
+        if (dao != null) {
+            dao.close();
+        }
+        dao = new VehicleDAOBase();
     }
 
     @FXML
