@@ -235,8 +235,17 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
     }
 
     @Override
-    public void changeVehicle(Vehicle vehicle) {
-
+    public void changeVehicle(Vehicle vehicle) throws IllegalArgumentException  {
+        checkOwnerAndManufacturer(vehicle);
+        int index = -1;
+        for (int i = 0; i < vehicles.size(); i++) {
+            if(vehicles.get(i).getId() == vehicle.getId()) {
+                vehicles.set(index, vehicle);
+                save();
+                sort();
+                break;
+            }
+        }
     }
 
     @Override
