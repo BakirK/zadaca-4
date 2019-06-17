@@ -369,6 +369,6 @@ public class VehicleDAOBase implements VehicleDAO {
 
     @Override
     public void close() {
-
+        deleteInstance();
     }
 }
