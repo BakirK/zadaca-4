@@ -11,16 +11,16 @@ import java.time.LocalDate;
 public class Owner implements Comparable<Owner> {
     private final ReadOnlyStringWrapper theName = new ReadOnlyStringWrapper();
 
-    private int id;
-    private String name, surname, parentName;
-    private LocalDate dateOfBirth;
-    private Place placeOfBirth;
-    private String livingAddress;
-    private Place livingPlace;
-    private String jmbg;
+    private int id = -1;
+    private String name = " ", surname = " ", parentName = " ";
+    private LocalDate dateOfBirth = LocalDate.of(1970,1,1);
+    private Place placeOfBirth = new Place();
+    private String livingAddress = " ";
+    private Place livingPlace = new Place();
+    private String jmbg = " ";
 
     public Owner(int id, String name, String surname, String parentName, LocalDate dateOfBirth, Place placeOfBirth, String livingAddress, Place livingPlace, String jmbg) {
-        theName.bind(Bindings.concat(name, " ", surname));
+
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -30,6 +30,7 @@ public class Owner implements Comparable<Owner> {
         this.livingAddress = livingAddress;
         this.livingPlace = livingPlace;
         this.jmbg = jmbg;
+        theName.bind(Bindings.concat(name, " ", surname));
     }
 
     public ReadOnlyStringProperty theNameProperty() {
@@ -41,6 +42,7 @@ public class Owner implements Comparable<Owner> {
     }
 
     public Owner() {
+        theName.bind(Bindings.concat(name, " ", surname));
     }
 
     public int getId() {
