@@ -1,6 +1,6 @@
 package ba.unsa.etf.rs.zadaca4;
 
-public class Place {
+public class Place implements Comparable<Place> {
     private int id;
     private String name;
     private String postalNumber;
@@ -42,5 +42,10 @@ public class Place {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Place o) {
+        return this.name.compareTo(o.name);
     }
 }
