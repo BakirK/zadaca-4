@@ -2,7 +2,7 @@ package ba.unsa.etf.rs.zadaca4;
 
 import java.time.LocalDate;
 
-public class Owner {
+public class Owner implements Comparable<Owner> {
     private int id;
     private String name, surname, parentName;
     private LocalDate dateOfBirth;
@@ -100,4 +100,9 @@ public class Owner {
 
     @Override
     public String toString() { return surname + " " + name; }
+
+    @Override
+    public int compareTo(Owner o) {
+        return this.id - o.id;
+    }
 }
