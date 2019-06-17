@@ -61,7 +61,7 @@ public class VehicleDAOBase implements VehicleDAO {
             updateVehicleStatement = connection.prepareStatement("UPDATE vehicle SET name=?, manufacturer=?," +
                     " model=?, chasis_number=?, plate_number=?, owner=?, jmbg=? " +
                     "WHERE id=?; COMMIT;");
-            deleteVehicleStatement = connection.prepareStatement("DELETE FROM vehicle WHERE id=?; COMMIT;")
+            deleteVehicleStatement = connection.prepareStatement("DELETE FROM vehicle WHERE id=?; COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
