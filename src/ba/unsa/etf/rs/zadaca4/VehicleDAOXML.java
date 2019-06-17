@@ -116,9 +116,38 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
         return FXCollections.observableArrayList(manufacturers);
     }
 
+    private void addPlaceIfNotExists(Place p) {
+        boolean found = false;
+        for(Place place: places) {
+            if(place.getId() == p.getId()) {
+                found = true;
+                break;
+            }
+        }
+
+        if(!found) {
+            int max = 0;
+            for(Place place: places) {
+                if(place.getId() > max) {
+                    max = place.getId();
+                }
+            }
+            p.setId(max + 1);
+            places.add(p);
+        }
+    }
     @Override
     public void addOwner(Owner owner) {
-
+        addPlaceIfNotExists(owner.getPlaceOfBirth());
+        addPlaceIfNotExists(owner.getLivingPlace());
+        int max = 0;
+        for(Owner o: owners) {
+            if(o.getId() > max) {
+                max = o.getId();
+            }
+        }
+        owner.setId(max + 1);
+        owners.add(owner);
     }
 
     @Override
