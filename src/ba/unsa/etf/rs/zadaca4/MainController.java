@@ -47,6 +47,10 @@ public class MainController {
 
     @FXML
     private void useXML(ActionEvent actionEvent) {
+        if (dao != null) {
+            dao.close();
+        }
+        dao = new VehicleDAOXML();
     }
 
     @FXML
