@@ -1,14 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="fxml.Main"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<BorderPane prefHeight="396.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER_LEFT">
+            <menus>
+                <Menu fx:id="menuOptions" mnemonicParsing="false" text="Options">
+                    <items>
+                        <RadioMenuItem fx:id="menuDb" mnemonicParsing="false" onAction="#useSQL" selected="true" text="SQLite" />
+                        <RadioMenuItem fx:id="menuXml" mnemonicParsing="false" onAction="#useXML" text="XML" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER_LEFT">
+            <tabs>
+                <Tab fx:id="ownersTab" text="Owners">
+                    <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                            <top>
+                                <HBox prefHeight="27.0" prefWidth="200.0" spacing="5.0" BorderPane.alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label prefHeight="20.0" prefWidth="65.0" text="Search: ">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" top="5.0" />
+                                 </HBox.margin></Label>
+                                        <TextField prefHeight="25.0" prefWidth="180.0" />
+                                        <Button fx:id="tbAddOwner" mnemonicParsing="false" onAction="#addOwner">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin></Button>
+                                        <Button fx:id="tbRemoveOwner" mnemonicParsing="false" onAction="#removeOwner">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin></Button>
+                                        <Button fx:id="tbEditOwner" mnemonicParsing="false" onAction="#editOwner">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin></Button>
+                                    </children>
+                           <BorderPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                           </BorderPane.margin>
+                                </HBox>
+                            </top>
+                            <center>
+                                <TableView fx:id="tableOwners" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                    <columns>
+                                        <TableColumn fx:id="tableOwnersId" prefWidth="50.0" text="ID" />
+                                        <TableColumn fx:id="tableOwnersName" prefWidth="150.0" text="Name and surname" />
+                                        <TableColumn fx:id="tableOwnersJmbg" prefWidth="125.0" text="JMBG" />
+                                    </columns>
+                                </TableView>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="vehiclesTab" text="Vehicles">
+                    <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                            <top>
+                                <HBox prefHeight="27.0" prefWidth="200.0" spacing="5.0" BorderPane.alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label prefHeight="20.0" prefWidth="65.0" text="Search: ">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" top="5.0" />
+                                 </HBox.margin></Label>
+                                        <TextField prefWidth="180.0" />
+                                        <Button fx:id="tbAddVehicle" mnemonicParsing="false" onAction="#addVehicle">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin></Button>
+                                        <Button fx:id="tbRemoveVehicle" mnemonicParsing="false" onAction="#removeVehicle">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin></Button>
+                                        <Button fx:id="tbEditVehicle" mnemonicParsing="false" onAction="#editVehicle">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin></Button>
+                                    </children>
+                           <BorderPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </BorderPane.margin>
+                                </HBox>
+                            </top>
+                            <center>
+                                <TableView fx:id="tableVehicles" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                    <columns>
+                                        <TableColumn fx:id="tableVehiclesId" prefWidth="50.0" text="ID" />
+                                        <TableColumn fx:id="tableVehiclesManufacturer" prefWidth="100.0" text="Manufacturer" />
+                                        <TableColumn fx:id="tableVehiclesModel" prefWidth="100.0" text="Model" />
+                                        <TableColumn fx:id="tableVehiclesChasisNumber" prefWidth="100.0" text="Chasis number" />
+                                        <TableColumn fx:id="tableVehiclesPlateNumber" prefWidth="100.0" text="Plate number" />
+                                    </columns>
+                                </TableView>
+                            </center>
+                     <padding>
+                        <Insets bottom="5.0" right="5.0" top="5.0" />
+                     </padding>
+                        </BorderPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+</BorderPane>
