@@ -19,7 +19,7 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
     private ArrayList<Place> places = new ArrayList<>();
     private ArrayList<Vehicle> vehicles = new ArrayList<>();
 
-    private VehicleDAOXML() {
+    public VehicleDAOXML() {
         load();
         sort();
     }
