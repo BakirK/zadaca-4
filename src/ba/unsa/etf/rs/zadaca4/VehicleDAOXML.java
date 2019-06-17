@@ -222,6 +222,13 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
     @Override
     public void addVehicle(Vehicle vehicle) throws IllegalArgumentException {
         checkOwnerAndManufacturer(vehicle);
+        int max = 0;
+        for(Vehicle v: vehicles) {
+            if(v.getId() > max) {
+                max = v.getId();
+            }
+        }
+        vehicle.setId(max + 1);
         vehicles.add(vehicle);
         save();
         sort();
