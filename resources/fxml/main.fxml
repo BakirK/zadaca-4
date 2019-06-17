@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane stylesheets="/css/mainForm.css" prefHeight="396.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:controller="ba.unsa.etf.rs.zadaca4.MainController" stylesheets="/css/mainForm.css" prefHeight="396.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
     <top>
         <MenuBar BorderPane.alignment="CENTER_LEFT">
             <menus>
@@ -36,7 +36,7 @@
                             <top>
                                 <HBox prefHeight="27.0" prefWidth="200.0" spacing="5.0" BorderPane.alignment="CENTER_LEFT">
                                     <children>
-                                        <Label prefHeight="20.0" prefWidth="65.0" text="Search: ">
+                                        <Label prefHeight="20.0" prefWidth="65.0" text="Search: " fx:id="searchOwner">
                                  <HBox.margin>
                                     <Insets bottom="5.0" left="5.0" top="5.0" />
                                  </HBox.margin></Label>
@@ -77,7 +77,7 @@
                             <top>
                                 <HBox prefHeight="27.0" prefWidth="200.0" spacing="5.0" BorderPane.alignment="CENTER_LEFT">
                                     <children>
-                                        <Label prefHeight="20.0" prefWidth="65.0" text="Search: ">
+                                        <Label prefHeight="20.0" prefWidth="65.0" text="Search: " fx:id="searchVehicle">
                                  <HBox.margin>
                                     <Insets bottom="5.0" left="5.0" top="5.0" />
                                  </HBox.margin></Label>
