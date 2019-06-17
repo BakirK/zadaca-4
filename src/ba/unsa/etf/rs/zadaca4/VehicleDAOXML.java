@@ -237,10 +237,9 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
     @Override
     public void changeVehicle(Vehicle vehicle) throws IllegalArgumentException  {
         checkOwnerAndManufacturer(vehicle);
-        int index = -1;
         for (int i = 0; i < vehicles.size(); i++) {
             if(vehicles.get(i).getId() == vehicle.getId()) {
-                vehicles.set(index, vehicle);
+                vehicles.set(i, vehicle);
                 save();
                 sort();
                 break;
@@ -250,7 +249,14 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
 
     @Override
     public void deleteVehicle(Vehicle vehicle) {
-
+        for (int i = 0; i < vehicles.size(); i++) {
+            if(vehicles.get(i).getId() == vehicle.getId()) {
+                vehicles.remove(i);
+                save();
+                sort();
+                break;
+            }
+        }
     }
 
     @Override
