@@ -328,7 +328,7 @@ public class VehicleDAOBase implements VehicleDAO {
     }
 
     @Override
-    public void changeVehicle(Vehicle vehicle) {
+    public void changeVehicle(Vehicle vehicle)throws IllegalArgumentException  {
         try {
             checkOwnerAndManufacturer(vehicle);
             updateVehicleStatement.setInt(1, vehicle.getManufacturer().getId());
