@@ -1,6 +1,6 @@
 package ba.unsa.etf.rs.zadaca4;
 
-public class Vehicle {
+public class Vehicle implements Comparable<Vehicle>{
     private int id;
     private Manufacturer manufacturer;
     private String model, chasisNumber, plateNumber;
@@ -64,5 +64,10 @@ public class Vehicle {
 
     public void setOwner(Owner owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public int compareTo(Vehicle o) {
+        return this.id - o.id;
     }
 }
