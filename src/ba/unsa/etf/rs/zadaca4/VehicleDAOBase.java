@@ -15,7 +15,7 @@ public class VehicleDAOBase implements VehicleDAO {
             updateOwnerStatement, addPlaceStatement, getMaxPlaceIdStatement, addOwnerStatement,
             getMaxOwnerIdStatement, deleteOwnerStatement, getOwnerVehiclesStatement,
             getMaxManufacturerIdStatement, addManufacturerStatement, addVehicleStatement,
-            getMaxVehicleIdStatement;
+            getMaxVehicleIdStatement, updateVehicleStatement, deleteVehicleStatement;
 
 
     public VehicleDAOBase() {
@@ -58,6 +58,10 @@ public class VehicleDAOBase implements VehicleDAO {
             addManufacturerStatement = connection.prepareStatement("INSERT INTO manufacturer VALUES (?,?); COMMIT;");
             addVehicleStatement = connection.prepareStatement("INSERT INTO vehicle VALUES(?,?,?,?,?,?); COMMIT;");
             getMaxVehicleIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM vehicle;");
+            updateVehicleStatement = connection.prepareStatement("UPDATE vehicle SET name=?, manufacturer=?," +
+                    " model=?, chasis_number=?, plate_number=?, owner=?, jmbg=? " +
+                    "WHERE id=?; COMMIT;");
+            deleteVehicleStatement = connection.prepareStatement("DELETE FROM vehicle WHERE id=?; COMMIT;")
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -308,16 +312,9 @@ public class VehicleDAOBase implements VehicleDAO {
     @Override
     public void addVehicle(Vehicle vehicle) {
         try {
-            //provjera da li postoji
-            getOwnerStatement.setInt(1, vehicle.getOwner().getId());
-            ResultSet res = getOwnerStatement.executeQuery();
-            if(!res.next()) {
-                throw new IllegalArgumentException("Owner does not exists");
-            }
-            int id = addManufacturerIfNotExists(vehicle.getManufacturer());
-            if(id != vehicle.getManufacturer().getId()) {
-                vehicle.getManufacturer().setId(id);
-            }
+            //provjera da li postoji owner
+            checkOwnerAndManufacturer(vehicle);
+            ResultSet res;
             res = getMaxVehicleIdStatement.executeQuery();
             vehicle.setId(res.getInt(1));
             addVehicleStatement.setInt(1, vehicle.getId());
@@ -334,12 +331,40 @@ public class VehicleDAOBase implements VehicleDAO {
 
     @Override
     public void changeVehicle(Vehicle vehicle) {
+        try {
+            checkOwnerAndManufacturer(vehicle);
+            updateVehicleStatement.setInt(1, vehicle.getManufacturer().getId());
+            updateVehicleStatement.setString(2, vehicle.getModel());
+            updateVehicleStatement.setString(3, vehicle.getChasisNumber());
+            updateVehicleStatement.setString(4, vehicle.getPlateNumber());
+            updateVehicleStatement.setInt(5, vehicle.getOwner().getId());
+            updateVehicleStatement.setInt(6, vehicle.getId());
+            updateVehicleStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void checkOwnerAndManufacturer(Vehicle vehicle) throws SQLException, IllegalArgumentException {
+        getOwnerStatement.setInt(1, vehicle.getOwner().getId());
+        ResultSet res = getOwnerStatement.executeQuery();
+        if(!res.next()) {
+            throw new IllegalArgumentException("Owner does not exists");
+        }
+        int id = addManufacturerIfNotExists(vehicle.getManufacturer());
+        if(id != vehicle.getManufacturer().getId()) {
+            vehicle.getManufacturer().setId(id);
+        }
     }
 
     @Override
     public void deleteVehicle(Vehicle vehicle) {
-
+        try {
+            deleteVehicleStatement.setInt(1, vehicle.getId());
+            deleteVehicleStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
