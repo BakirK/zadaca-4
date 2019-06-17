@@ -217,12 +217,14 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
             throw new IllegalArgumentException("Owner does not exists");
         }
         vehicle.getManufacturer().setId(addManufacturerIfNotExists(vehicle.getManufacturer()));
-
     }
 
     @Override
-    public void addVehicle(Vehicle vehicle) {
-
+    public void addVehicle(Vehicle vehicle) throws IllegalArgumentException {
+        checkOwnerAndManufacturer(vehicle);
+        vehicles.add(vehicle);
+        save();
+        sort();
     }
 
     @Override
