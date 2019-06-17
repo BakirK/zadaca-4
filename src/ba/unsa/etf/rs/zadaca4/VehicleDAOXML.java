@@ -1,26 +1,37 @@
 package ba.unsa.etf.rs.zadaca4;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class VehicleDAOXML implements VehicleDAO {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class VehicleDAOXML implements VehicleDAO, Serializable {
+    private static final long serialVersionUID = 1L;
+    private ArrayList<Manufacturer> manufacturers = new ArrayList<>();
+    private ArrayList<Owner> owners = new ArrayList<>();
+    private ArrayList<Place> places = new ArrayList<>();
+    private ArrayList<Vehicle> vehicles = new ArrayList<>();
+
+
     @Override
     public ObservableList<Owner> getOwners() {
-        return null;
+        return FXCollections.observableArrayList(owners);
     }
 
     @Override
     public ObservableList<Vehicle> getVehicles() {
-        return null;
+        return FXCollections.observableArrayList(vehicles);
     }
 
     @Override
     public ObservableList<Place> getPlaces() {
-        return null;
+        return FXCollections.observableArrayList(places);
     }
 
     @Override
     public ObservableList<Manufacturer> getManufacturers() {
-        return null;
+        return FXCollections.observableArrayList(manufacturers);
     }
 
     @Override
