@@ -13,7 +13,7 @@ public class VehicleDAOBase implements VehicleDAO {
     private PreparedStatement getOwnersStatement, getPlaceStatement, getVehiclesStatement,
         getManufacturerStatement, getManufacturersStatement, getOwnerStatement, getPlacesStatement,
             updateOwnerStatement, addPlaceStatement, getMaxPlaceIdStatement, addOwnerStatement,
-            getMaxOwnerIdStatement;
+            getMaxOwnerIdStatement, deleteOwnerStatement, getOwnerVehiclesStatement;
 
 
     public VehicleDAOBase() {
@@ -50,6 +50,8 @@ public class VehicleDAOBase implements VehicleDAO {
             getMaxPlaceIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM place;");
             getMaxOwnerIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM owner;");
             addOwnerStatement = connection.prepareStatement("INSERT INTO owner VALUES (?,?,?,?,?,?,?,?,?); COMMIT;");
+            getOwnerVehiclesStatement = connection.prepareStatement("SELECT * FROM vehicle WHERE owner=?;");
+            deleteOwnerStatement = connection.prepareStatement("DELETE FROM owner WHERE id=?; COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -211,7 +213,7 @@ public class VehicleDAOBase implements VehicleDAO {
             addOwnerStatement.setInt( 6, owner.getPlaceOfBirth().getId());
             addOwnerStatement.setString( 7, owner.getLivingAddress());
             addOwnerStatement.setInt( 8, owner.getLivingPlace().getId());
-            addOwnerStatement.setString( 8, owner.getJmbg());
+            addOwnerStatement.setString( 9, owner.getJmbg());
             addOwnerStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
