@@ -145,6 +145,22 @@ public class MainController {
 
         @FXML
         private void editVehicle (ActionEvent actionEvent){
+            Stage stage = new Stage();
+            Parent root = null;
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
+                OwnerController voziloController = new OwnerController(dao, (Owner) tableOwners.getSelectionModel().getSelectedItem());
+                loader.setController(voziloController);
+                root = loader.load();
+                stage.setTitle("Edit vehicle");
+                stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+                stage.setResizable(false);
+                stage.show();
+
+                stage.setOnHiding( event -> updateTableView());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     private void updateTableView() {
