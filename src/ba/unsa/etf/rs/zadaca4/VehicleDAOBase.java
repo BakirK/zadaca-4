@@ -293,7 +293,7 @@ public class VehicleDAOBase implements VehicleDAO {
     }
 
     @Override
-    public void deleteOwner(Owner owner) {
+    public void deleteOwner(Owner owner) throws IllegalArgumentException {
         try {
             getOwnerVehiclesStatement.setInt(1, owner.getId());
             ResultSet res = getOwnerVehiclesStatement.executeQuery();

@@ -75,17 +75,15 @@ public class MainController {
         Stage stage = new Stage();
         Parent root = null;
         try {
-            if((Owner) tableOwners.getSelectionModel().getSelectedItem() != null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
-                OwnerController ownerController = new OwnerController(dao, null);
-                loader.setController(ownerController);
-                root = loader.load();
-                stage.setTitle("Add owner");
-                stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
-                stage.setResizable(false);
-                stage.show();
-                stage.setOnHiding(event -> updateTableView());
-            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
+            OwnerController ownerController = new OwnerController(dao, null);
+            loader.setController(ownerController);
+            root = loader.load();
+            stage.setTitle("Add owner");
+            stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+            stage.setResizable(false);
+            stage.show();
+            stage.setOnHiding(event -> updateTableView());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,13 +92,21 @@ public class MainController {
     @FXML
     private void removeOwner(ActionEvent actionEvent) {
         if (tableOwners.getSelectionModel().getSelectedItem() != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete selected owner?", ButtonType.OK, ButtonType.NO, ButtonType.CANCEL);
-            alert.showAndWait();
+            try {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete selected owner?", ButtonType.OK, ButtonType.NO, ButtonType.CANCEL);
+                alert.showAndWait();
 
-            if (alert.getResult() == ButtonType.OK) {
-                dao.deleteOwner((Owner) tableOwners.getSelectionModel().getSelectedItem());
-                updateTableView();
-                //tableOwners.getSelectionModel().selectFirst();
+                if (alert.getResult() == ButtonType.OK) {
+                    dao.deleteOwner((Owner) tableOwners.getSelectionModel().getSelectedItem());
+                    updateTableView();
+                    //tableOwners.getSelectionModel().selectFirst();
+                }
+            } catch(IllegalArgumentException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Unable to detele owner");
+                alert.setContentText(e.getMessage());
+                alert.show();
             }
         }
     }
@@ -110,17 +116,15 @@ public class MainController {
             Stage stage = new Stage();
             Parent root = null;
             try {
-                if((Owner) tableOwners.getSelectionModel().getSelectedItem() != null) {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
-                    OwnerController ownerController = new OwnerController(dao, (Owner) tableOwners.getSelectionModel().getSelectedItem());
-                    loader.setController(ownerController);
-                    root = loader.load();
-                    stage.setTitle("Edit owner");
-                    stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
-                    stage.setResizable(false);
-                    stage.show();
-                    stage.setOnHiding(event -> updateTableView());
-                }
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
+                OwnerController ownerController = new OwnerController(dao, (Owner) tableOwners.getSelectionModel().getSelectedItem());
+                loader.setController(ownerController);
+                root = loader.load();
+                stage.setTitle("Edit owner");
+                stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+                stage.setResizable(false);
+                stage.show();
+                stage.setOnHiding(event -> updateTableView());
             } catch (IOException e) {
                 e.printStackTrace();
             }

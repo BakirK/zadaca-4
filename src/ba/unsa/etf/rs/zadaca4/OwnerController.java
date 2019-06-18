@@ -72,7 +72,7 @@ public class OwnerController {
             addressField.getStyleClass().add("fieldIncorrect");
 
             jmbgField.setText("");
-            jmbgField.getStyleClass().add("fieldCorrect");
+            jmbgField.getStyleClass().add("fieldIncorrect");
 
             dateField.setValue(LocalDate.now());
             dateField.getEditor().getStyleClass().add("fieldIncorrect");
@@ -229,14 +229,12 @@ public class OwnerController {
         jmbgField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                if(t1.trim().isEmpty() || !checkJMBG(t1)) {
+                if(t1.trim().isEmpty()) {
                     jmbgField.getStyleClass().removeAll("fieldCorrect");
                     jmbgField.getStyleClass().add("fieldIncorrect");
                     jmbgCorrectInput = false;
                 } else {
-                    jmbgField.getStyleClass().removeAll("fieldIncorrect");
-                    jmbgField.getStyleClass().add("fieldCorrect");
-                    jmbgCorrectInput = true;
+                    checkJMBG(t1);
                 }
             }
         });
@@ -283,9 +281,11 @@ public class OwnerController {
         }
         return true;
 }
-    private boolean checkJMBG(String jmbg) {
+    private void checkJMBG(String jmbg) {
         if (jmbg.length() != 13) {
-            return false;
+            jmbgField.getStyleClass().removeAll("fieldCorrect");
+            jmbgField.getStyleClass().add("fieldIncorrect");
+            jmbgCorrectInput = false;
         }
 
         int day = Integer.parseInt(jmbg.substring(0, 2));
@@ -297,17 +297,25 @@ public class OwnerController {
             year += 1000;
         }
         if(!checkDate(day, month, year)) {
-            return false;
+            jmbgField.getStyleClass().removeAll("fieldCorrect");
+            jmbgField.getStyleClass().add("fieldIncorrect");
+            jmbgCorrectInput = false;
         }
         LocalDate date = dateField.getValue();
         if(date.isAfter(LocalDate.now())) {
-            return false;
+            jmbgField.getStyleClass().removeAll("fieldCorrect");
+            jmbgField.getStyleClass().add("fieldIncorrect");
+            jmbgCorrectInput = false;
         }
         if (date.getDayOfMonth() != day) {
-            return false;
+            jmbgField.getStyleClass().removeAll("fieldCorrect");
+            jmbgField.getStyleClass().add("fieldIncorrect");
+            jmbgCorrectInput = false;
         }
         if (date.getYear() != year) {
-            return false;
+            jmbgField.getStyleClass().removeAll("fieldCorrect");
+            jmbgField.getStyleClass().add("fieldIncorrect");
+            jmbgCorrectInput = false;
         }
         int[] numbers = new int[13];
         for (int i=0; i < 13; i++) {
@@ -320,15 +328,21 @@ public class OwnerController {
             sum = 0;
         }
         if (numbers[12] != sum) {
-            return false;
+            jmbgField.getStyleClass().removeAll("fieldCorrect");
+            jmbgField.getStyleClass().add("fieldIncorrect");
+            jmbgCorrectInput = false;
         }
-        return true;
+        jmbgField.getStyleClass().removeAll("fieldIncorrect");
+        jmbgField.getStyleClass().add("fieldCorrect");
+        jmbgCorrectInput = true;
     }
 
     @FXML
     private void validateInput(ActionEvent actionEvent) {
         Place p1 = checkPlace(placeOfBirth, true);
         Place p2 = checkPlace(addressPlace, false);
+        checkJMBG(jmbgField.getText());
+
         if(nameCorrectInput && surnameCorrectInput && parentNameCorrectInput &&
                 addressCorrectInput && birthdayCorrectInput && jmbgCorrectInput &&
                 birthPlaceCorrectInput && addressPlaceCorrectInput && postalNumberCorrectInput) {
@@ -378,6 +392,7 @@ public class OwnerController {
         for (Place p : dao.getPlaces()) {
             if (p.getName().equals(name)) {
                 place = p;
+                break;
             }
         }
         if (place == null) {
@@ -396,6 +411,8 @@ public class OwnerController {
                     if (checkPostalNumber()) {
                         place = new Place(-1, name, postalNumberField.getText().trim());
                         postalNumberCorrectInput = true;
+                    } else {
+                        postalNumberCorrectInput = false;
                     }
                 } else {
                     place = new Place(-1, name, "");
@@ -407,7 +424,6 @@ public class OwnerController {
             comboBox.getStyleClass().add("fieldCorrect");
             if(first) birthPlaceCorrectInput = true;
             else addressPlaceCorrectInput = true;
-            if (postalNumberField != null) {
                 if(!first) {
                     if (!postalNumberField.getText().equals(place.getPostalNumber()) && !postalNumberField.getText().isEmpty()) {
                         comboBox.getStyleClass().removeAll("fieldCorrect");
@@ -415,9 +431,12 @@ public class OwnerController {
                         if(first) birthPlaceCorrectInput = false;
                         else addressPlaceCorrectInput = false;
                         return null;
+                    } else {
+                        postalNumberCorrectInput = true;
                     }
+                } else {
+                    postalNumberCorrectInput = true;
                 }
-            }
         }
         return place;
     }
