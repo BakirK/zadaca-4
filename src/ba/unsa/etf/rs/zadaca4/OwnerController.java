@@ -325,6 +325,8 @@ public class OwnerController {
 
     @FXML
     private void validateInput(ActionEvent actionEvent) {
+        Place p1 = checkPlace(placeOfBirth, true);
+        Place p2 = checkPlace(addressPlace, false);
         if(nameCorrectInput && surnameCorrectInput && parentNameCorrectInput &&
                 addressCorrectInput && birthdayCorrectInput && jmbgCorrectInput &&
                 birthPlaceCorrectInput && addressPlaceCorrectInput && postalNumberCorrectInput) {
@@ -335,8 +337,8 @@ public class OwnerController {
             owner.setSurname(surnameField.getText());
             owner.setParentName(parentNameField.getText());
             owner.setJmbg(jmbgField.getText());
-            owner.setPlaceOfBirth((Place) placeOfBirth.getValue());
-            owner.setLivingPlace((Place) addressPlace.getValue());
+            owner.setPlaceOfBirth(p1);
+            owner.setLivingPlace(p2);
             owner.setLivingAddress(addressField.getText());
             owner.setDateOfBirth(dateField.getValue());
             dao.addOwner(owner);
@@ -353,10 +355,12 @@ public class OwnerController {
     }
 
 
-    private Place checkPlace(ComboBox comboBox) {
+    private Place checkPlace(ComboBox comboBox, boolean first) {
         if (comboBox.getValue() == null) {
             comboBox.getStyleClass().removeAll("fieldCorrect");
             comboBox.getStyleClass().add("fieldIncorrect");
+            if(first) birthPlaceCorrectInput = false;
+            else addressPlaceCorrectInput = false;
             return null;
         }
 
@@ -371,23 +375,29 @@ public class OwnerController {
             if (name.trim().isEmpty()) {
                 comboBox.getStyleClass().removeAll("fieldCorrect");
                 comboBox.getStyleClass().add("fieldIncorrect");
+                if(first) birthPlaceCorrectInput = false;
+                else addressPlaceCorrectInput = false;
             } else {
                 comboBox.getStyleClass().removeAll("fieldIncorrect");
                 comboBox.getStyleClass().add("fieldCorrect");
+                if(first) birthPlaceCorrectInput = true;
+                else addressPlaceCorrectInput = true;
                 String postalNumber = "";
                 if(checkPostalNumber()) {
                     place = new Place(-1, name, postalNumberField.getText().trim());
                 }
-
             }
         } else {
             comboBox.getStyleClass().removeAll("fieldIncorrect");
             comboBox.getStyleClass().add("fieldCorrect");
-
+            if(first) birthPlaceCorrectInput = true;
+            else addressPlaceCorrectInput = true;
             if (postalNumberField != null) {
-                if (!postalNumberField.getText().equals(place.getPostalNumber())) {
+                if (!postalNumberField.getText().equals(place.getPostalNumber()) && !postalNumberField.getText().isEmpty()) {
                     comboBox.getStyleClass().removeAll("fieldCorrect");
                     comboBox.getStyleClass().add("fieldIncorrect");
+                    if(first) birthPlaceCorrectInput = false;
+                    else addressPlaceCorrectInput = false;
                     return null;
                 }
             }
@@ -397,7 +407,7 @@ public class OwnerController {
 
     private boolean checkPostalNumber() {
         String adresa = "http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=";
-        adresa += postalNumberField.getText();
+        adresa += postalNumberField.getText().trim();
         try {
             URL url = new URL(adresa);
             BufferedReader input = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
