@@ -318,6 +318,24 @@ public class OwnerController {
 
     @FXML
     private void validateInput(ActionEvent actionEvent) {
+        if(nameCorrectInput && surnameCorrectInput && parentNameCorrectInput &&
+                addressCorrectInput && birthdayCorrectInput && jmbgCorrectInput &&
+                birthPlaceCorrectInput && addressPlaceCorrectInput && postalNumberCorrectInput) {
+            if(owner == null) {
+                owner = new Owner();
+            }
+            owner.setName(nameField.getText());
+            owner.setSurname(surnameField.getText());
+            owner.setParentName(parentNameField.getText());
+            owner.setJmbg(jmbgField.getText());
+            owner.setPlaceOfBirth((Place) placeOfBirth.getValue());
+            owner.setLivingPlace((Place) addressPlace.getValue());
+            owner.setLivingAddress(addressField.getText());
+            owner.setDateOfBirth(dateField.getValue());
+            dao.addOwner(owner);
+            zatvoriProzorPropuhJe(actionEvent);
+        }
+
     }
 
     @FXML
