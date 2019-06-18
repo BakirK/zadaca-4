@@ -286,32 +286,37 @@ public class OwnerController {
         int day = Integer.parseInt(jmbg.substring(0, 2));
         int month = Integer.parseInt(jmbg.substring(2, 4));
         int year = Integer.parseInt(jmbg.substring(4, 7));
-        if (year > 500) {
-            year += 1000;
-        } else {
+        if (year <= 18) {
             year += 2000;
+        } else {
+            year += 1000;
         }
         if(!checkDate(day, month, year)) {
             return false;
         }
-
-
         LocalDate date = dateField.getValue();
+        if(date.isAfter(LocalDate.now())) {
+            return false;
+        }
         if (date.getDayOfMonth() != day) {
             return false;
         }
         if (date.getYear() != year) {
             return false;
         }
-        int[] br = new int[13];
-        for (int i=0; i<13; i++) {
-            br[i] = Integer.parseInt(jmbg.charAt(i));
-            br[i] -= 48;
+        int[] numbers = new int[13];
+        for (int i=0; i < 13; i++) {
+            numbers[i] = Integer.parseInt(jmbg.substring(i, i + 1));
         }
-        int sum = 7*(br[0]+br[6]) + 6*(br[1]+br[7]) + 5*(br[2]+br[8]) + 4*(br[3]+br[9]) + 3*(br[4]+br[10]) + 2*(br[5]+br[11]);
+        int sum = 7 * (numbers[0] + numbers[6]) + 6 * (numbers[1] + numbers[7]) + 5 * (numbers[2]+numbers[8]) + 4 *
+                (numbers[3] + numbers[9]) + 3 * (numbers[4] + numbers[10]) + 2 * (numbers[5] + numbers[11]);
         sum = 11 - (sum % 11);
-        if (sum > 9) sum = 0;
-        if (br[12] != sum) return false;
+        if (sum ==10  || sum == 11) {
+            sum = 0;
+        }
+        if (numbers[12] != sum) {
+            return false;
+        }
         return true;
     }
 
