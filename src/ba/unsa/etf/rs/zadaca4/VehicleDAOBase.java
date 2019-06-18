@@ -298,7 +298,7 @@ public class VehicleDAOBase implements VehicleDAO {
             getOwnerVehiclesStatement.setInt(1, owner.getId());
             ResultSet res = getOwnerVehiclesStatement.executeQuery();
             if(res.next()) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Selected owner has vehicles assigned to him!");
             }
             deleteOwnerStatement.setInt(1, owner.getId());
             deleteOwnerStatement.executeUpdate();
