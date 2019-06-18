@@ -1,5 +1,6 @@
 package ba.unsa.etf.rs.zadaca4;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -11,7 +12,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-
+import org.json.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -343,5 +350,76 @@ public class OwnerController {
         Node n = (Node) actionEvent.getSource();
         Stage stage = (Stage) n.getScene().getWindow();
         stage.close();
+    }
+
+
+    private Place checkPlace(ComboBox comboBox) {
+        if (comboBox.getValue() == null) {
+            comboBox.getStyleClass().removeAll("fieldCorrect");
+            comboBox.getStyleClass().add("fieldIncorrect");
+            return null;
+        }
+
+        Place place = null;
+        String name = comboBox.getValue().toString().trim();
+        for (Place p : dao.getPlaces()) {
+            if (p.getName().equals(name)) {
+                place = p;
+            }
+        }
+        if (place == null) {
+            if (name.trim().isEmpty()) {
+                comboBox.getStyleClass().removeAll("fieldCorrect");
+                comboBox.getStyleClass().add("fieldIncorrect");
+            } else {
+                comboBox.getStyleClass().removeAll("fieldIncorrect");
+                comboBox.getStyleClass().add("fieldCorrect");
+                String postalNumber = "";
+                if(checkPostalNumber()) {
+                    place = new Place(-1, name, postalNumberField.getText().trim());
+                }
+
+            }
+        } else {
+            comboBox.getStyleClass().removeAll("fieldIncorrect");
+            comboBox.getStyleClass().add("fieldCorrect");
+
+            if (postalNumberField != null) {
+                if (!postalNumberField.getText().equals(place.getPostalNumber())) {
+                    comboBox.getStyleClass().removeAll("fieldCorrect");
+                    comboBox.getStyleClass().add("fieldIncorrect");
+                    return null;
+                }
+            }
+        }
+        return place;
+    }
+
+    private boolean checkPostalNumber() {
+        String adresa = "http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=";
+        adresa += postalNumberField.getText();
+        try {
+            URL url = new URL(adresa);
+            BufferedReader input = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+            String json = "", line = null;
+            while ((line = input.readLine()) != null) {
+                json += line;
+            }
+            input.close();
+            if (json.equals("OK")) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch(MalformedURLException e) {
+            System.out.println("String "+adresa+" ne predstavlja validan URL");
+        } catch(IOException e) {
+            System.out.println("Greška pri kreiranju ulaznog toka");
+            System.out.println(e.getMessage());
+        } catch(Exception e) {
+            System.out.println("Poteškoće sa obradom JSON podataka");
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 }
