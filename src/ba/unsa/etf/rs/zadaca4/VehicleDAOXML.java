@@ -3,12 +3,12 @@ package ba.unsa.etf.rs.zadaca4;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
+import java.beans.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -77,6 +77,16 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
     private void save() {
         try {
             XMLEncoder XMLdecoder = new XMLEncoder(new FileOutputStream("manufacturers.xml"));
+            XMLdecoder.setPersistenceDelegate(LocalDate.class,
+                    new PersistenceDelegate() {
+                        @Override
+                        protected Expression instantiate(Object localDate, Encoder encdr) {
+                            return new Expression(localDate,
+                                    LocalDate.class,
+                                    "parse",
+                                    new Object[]{localDate.toString()});
+                        }
+                    });
             XMLdecoder.writeObject(manufacturers);
             XMLdecoder.close();
 
