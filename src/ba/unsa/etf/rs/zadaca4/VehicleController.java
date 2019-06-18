@@ -8,6 +8,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.util.Comparator;
+
 public class VehicleController {
     @FXML
     private TextField modelField;
@@ -34,6 +36,12 @@ public class VehicleController {
     @FXML
     public void initialize() {
         ObservableList<Owner> owners = dao.getOwners();
+        owners.sort(new Comparator<Owner>() {
+            @Override
+            public int compare(Owner o1, Owner o2) {
+                return o1.toString().compareTo(o2.toString());
+            }
+        });
         ownerCombo.setItems(owners);
         ObservableList<Manufacturer> manufacturers = dao.getManufacturers();
         manufacturerCombo.setItems(manufacturers);
@@ -78,6 +86,44 @@ public class VehicleController {
 
     @FXML
     private void validateInput(ActionEvent actionEvent) {
+        Manufacturer m = checkManufacturer();
+        boolean adding = false;
+        if(vehicle == null) {
+            vehicle = new Vehicle();
+            adding = true;
+        }
+        if(m != null) {
+            vehicle.setModel(modelField.getText());
+            vehicle.setPlateNumber(plateNumberField.getText());
+            vehicle.setChasisNumber(chasisNumberField.getText());
+            vehicle.setManufacturer(m);
+            vehicle.setOwner((Owner) ownerCombo.getValue());
+            if(adding) {
+                dao.addVehicle(vehicle);
+            } else {
+                dao.changeVehicle(vehicle);
+            }
+            zatvoriProzorPropuhJe(actionEvent);
+        }
+    }
+
+    private Manufacturer checkManufacturer() {
+        Manufacturer man = null;
+        if(manufacturerCombo.getValue() == null) {
+            return null;
+        }
+        String name = manufacturerCombo.getValue().toString().trim();
+        for(Manufacturer m: dao.getManufacturers()) {
+            if(m.getName().equals(name)) {
+                man = m;
+            }
+        }
+        if(man == null) {
+            if(!name.trim().isEmpty()) {
+                man = new Manufacturer(-1, name);
+            }
+        }
+        return man;
     }
 
     @FXML
