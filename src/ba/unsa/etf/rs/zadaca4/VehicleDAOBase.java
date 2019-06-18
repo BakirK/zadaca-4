@@ -44,8 +44,8 @@ public class VehicleDAOBase implements VehicleDAO {
 
             getOwnerStatement = connection.prepareStatement("SELECT * FROM owner WHERE id=?;");
             updateOwnerStatement = connection.prepareStatement("UPDATE owner SET name=?, surname=?," +
-                    " parent_name=?, date_of_birth=?, place_of_birth=?, living_address=?, jmbg=? " +
-                    "WHERE id=?; COMMIT;");
+                    " parent_name=?, date_of_birth=?, place_of_birth=?, living_address=?," +
+                    " living_place=?, jmbg=? WHERE id=?; COMMIT;");
             addPlaceStatement = connection.prepareStatement("INSERT INTO place VALUES (?,?,?); COMMIT;");
             getMaxPlaceIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM place;");
             getMaxOwnerIdStatement = connection.prepareStatement("SELECT max(id) + 1 FROM owner;");
