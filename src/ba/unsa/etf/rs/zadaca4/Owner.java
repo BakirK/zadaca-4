@@ -11,6 +11,16 @@ import java.time.LocalDate;
 public class Owner implements Comparable<Owner> {
     private final ReadOnlyStringWrapper theName = new ReadOnlyStringWrapper();
 
+    public long getDateOfBirthDays() {
+        return dateOfBirthDays;
+    }
+
+    public void setDateOfBirthDays(long dateOfBirthDays) {
+        this.dateOfBirthDays = dateOfBirthDays;
+        this.dateOfBirth = LocalDate.ofEpochDay(dateOfBirthDays);
+    }
+
+    long dateOfBirthDays;
     private int id = -1;
     private String name = " ", surname = " ", parentName = " ";
     private LocalDate dateOfBirth = LocalDate.of(1970,1,1);
@@ -31,6 +41,7 @@ public class Owner implements Comparable<Owner> {
         this.livingPlace = livingPlace;
         this.jmbg = jmbg;
         theName.bind(Bindings.concat(name, " ", surname));
+        this.dateOfBirthDays = this.dateOfBirth.toEpochDay();
     }
 
     public ReadOnlyStringProperty theNameProperty() {

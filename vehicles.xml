@@ -94,6 +94,9 @@
     </void>
     <void property="owner">
      <object class="ba.unsa.etf.rs.zadaca4.Owner" id="Owner1">
+      <void property="dateOfBirthDays">
+       <long>31</long>
+      </void>
       <void property="id">
        <int>1</int>
       </void>
