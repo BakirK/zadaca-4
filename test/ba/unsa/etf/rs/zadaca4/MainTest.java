@@ -32,7 +32,6 @@ import java.time.LocalDate;
 class MainTest {
     Stage theStage;
     VehicleDAO dao;
-    Controller controller;
 
     @Start
     public void start (Stage stage) throws Exception {
@@ -370,7 +369,7 @@ class MainTest {
         ObservableList<Vehicle> vehicles = dao.getVehicles();
         dao.close();
         assertEquals(2, vehicles.size());
-        assertEquals("Skoda", vehicles.get(1).getManufacturer().getNaziv());
+        assertEquals("Skoda", vehicles.get(1).getManufacturer().getName());
         assertEquals("Fabia", vehicles.get(1).getModel());
         assertEquals("1234193459845", vehicles.get(1).getChasisNumber());
         assertEquals("M23-K-456", vehicles.get(1).getPlateNumber());

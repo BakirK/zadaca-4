@@ -44,7 +44,7 @@ class VehicleControllerTest {
             fail("Ne mogu kreirati bazu");
         }
 
-        dao = new VehicleDAOBaza();
+        dao = new VehicleDAOBase();
 
         // Ovo bi trebalo da iskopira fajl iz resources u test-resources, a ipak radi i sa mavenom
         File fxml = new File("resources/fxml/vehicle.fxml");
