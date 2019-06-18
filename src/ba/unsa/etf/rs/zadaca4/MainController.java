@@ -7,8 +7,16 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
 public class MainController {
     @FXML
@@ -64,7 +72,22 @@ public class MainController {
 
     @FXML
     private void addOwner(ActionEvent actionEvent) {
+        Stage stage = new Stage();
+        Parent root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
+            OwnerController voziloController = new OwnerController(dao, null);
+            loader.setController(voziloController);
+            root = loader.load();
+            stage.setTitle("Add vehicle");
+            stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+            stage.setResizable(false);
+            stage.show();
 
+            stage.setOnHiding( event -> updateTableView());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -83,6 +106,22 @@ public class MainController {
 
         @FXML
         private void editOwner (ActionEvent actionEvent){
+            Stage stage = new Stage();
+            Parent root = null;
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
+                OwnerController voziloController = new OwnerController(dao, (Owner) tableOwners.getSelectionModel().getSelectedItem());
+                loader.setController(voziloController);
+                root = loader.load();
+                stage.setTitle("Edit vehicle");
+                stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+                stage.setResizable(false);
+                stage.show();
+
+                stage.setOnHiding( event -> updateTableView());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         @FXML
