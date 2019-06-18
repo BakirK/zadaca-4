@@ -5,9 +5,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.time.LocalDate;
@@ -177,7 +179,7 @@ public class OwnerController {
         jmbgField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                if(t1.trim().isEmpty()) {
+                if(t1.trim().isEmpty() || !checkJMBG(t1)) {
                     jmbgField.getStyleClass().removeAll("fieldCorrect");
                     jmbgField.getStyleClass().add("fieldIncorrect");
                     jmbgCorrectInput = false;
@@ -188,7 +190,6 @@ public class OwnerController {
                 }
             }
         });
-
 
 
         dateField.valueProperty().addListener(new ChangeListener<LocalDate>() {
@@ -205,7 +206,6 @@ public class OwnerController {
                 }
             }
         });
-
 
         dateField.setConverter(new StringConverter<LocalDate>() {
             {
@@ -247,7 +247,6 @@ public class OwnerController {
             }
         });
 
-
         placeOfBirth.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object o, Object t1) {
@@ -262,16 +261,13 @@ public class OwnerController {
                 }
             }
         });
-
-
-
     }
 
 
     private boolean checkDate(int d, int m, int g) {
         int[] broj_dana = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         if(g % 4 == 0 && (g % 100 != 0 || g % 400 == 0)) {
-        broj_dana[1]++;
+            broj_dana[1]++;
         }
         if(g < 1 || d < 1 || m < 1 || m > 12 || d > broj_dana[m - 1] ) {
             return false;
@@ -326,5 +322,8 @@ public class OwnerController {
 
     @FXML
     private void zatvoriProzorPropuhJe(ActionEvent actionEvent) {
+        Node n = (Node) actionEvent.getSource();
+        Stage stage = (Stage) n.getScene().getWindow();
+        stage.close();
     }
 }
