@@ -128,22 +128,26 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
 
     private int addPlaceIfNotExists(Place p) {
         boolean found = false;
-        for(Place place: places) {
-            if(place.getId() == p.getId()) {
-                found = true;
-                break;
+        for (int i = 0; i < places.size(); i++) {
+            if(places.get(i).getId() == p.getId() && places.get(i).getName().equals(p.getName())
+                        && places.get(i).getPostalNumber().equals(p.getPostalNumber()) ) {
+                places.set(i, p);
+                return p.getId();
             }
         }
-        int max = p.getId();
+        int max = -1;
         if(!found) {
+
             for(Place place: places) {
                 if(place.getId() > max) {
                     max = place.getId();
                 }
             }
-            p.setId(max + 1);
+            max++;
+            p.setId(max );
             places.add(p);
         }
+        System.out.println("max: " + max);
         return max;
     }
     @Override
@@ -169,6 +173,8 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
         for (int i = 0; i < owners.size(); i++) {
             if(owners.get(i).getId() == owner.getId()) {
                 index = i;
+                System.out.println("index: " + index);
+                break;
             }
         }
         if(index != -1) {
@@ -210,7 +216,8 @@ public class VehicleDAOXML implements VehicleDAO, Serializable {
                     id = manufacturer.getId();
                 }
             }
-            m.setId(id + 1);
+            id++;
+            m.setId(id);
             manufacturers.add(m);
         }
         return id;
