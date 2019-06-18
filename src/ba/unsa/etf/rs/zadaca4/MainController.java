@@ -68,7 +68,7 @@ public class MainController {
 
     @FXML
     private void removeOwner(ActionEvent actionEvent) {
-        if ( tableOwners.getSelectionModel().getSelectedItem() != null) {
+        if (tableOwners.getSelectionModel().getSelectedItem() != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete selected owner?", ButtonType.OK, ButtonType.NO, ButtonType.CANCEL);
             alert.showAndWait();
 
@@ -76,23 +76,40 @@ public class MainController {
                 dao.deleteOwner((Owner) tableOwners.getSelectionModel().getSelectedItem());
                 updateTableView();
                 tableOwners.getSelectionModel().selectFirst();
+            }
         }
     }
 
-    @FXML
-    private void editOwner(ActionEvent actionEvent) {
+        @FXML
+        private void editOwner (ActionEvent actionEvent){
+        }
+
+        @FXML
+        private void addVehicle (ActionEvent actionEvent){
+        }
+
+        @FXML
+        private void removeVehicle (ActionEvent actionEvent){
+        }
+
+        @FXML
+        private void editVehicle (ActionEvent actionEvent){
+        }
+
+    private void updateTableView() {
+        int index = tableOwners.getSelectionModel().getSelectedIndex();
+        tableOwners.getItems().clear();
+        tableOwners.setItems(dao.getOwners());
+        tableOwners.requestFocus();
+        tableOwners.getSelectionModel().select(index);
+
+
+        index = tableVehicles.getSelectionModel().getSelectedIndex();
+        tableVehicles.getItems().clear();
+        tableVehicles.setItems(dao.getVehicles());
+        tableVehicles.requestFocus();
+        tableOwners.getSelectionModel().select(index);
     }
 
-    @FXML
-    private void addVehicle(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void removeVehicle(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void editVehicle(ActionEvent actionEvent) {
-    }
 }
 
