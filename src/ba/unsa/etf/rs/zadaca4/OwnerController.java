@@ -240,11 +240,11 @@ public class OwnerController {
                 }
             }
         });
-
+/*
         addressPlace.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object o, Object t1) {
-                if(t1 == null) {
+                if(checkPlace(addressPlace, false) == null) {
                     addressPlace.getStyleClass().removeAll("fieldCorrect");
                     addressPlace.getStyleClass().add("fieldIncorrect");
                     addressPlaceCorrectInput = false;
@@ -259,7 +259,7 @@ public class OwnerController {
         placeOfBirth.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object o, Object t1) {
-                if(t1 == null) {
+                if(checkPlace(placeOfBirth, true) == null) {
                     placeOfBirth.getStyleClass().removeAll("fieldCorrect");
                     placeOfBirth.getStyleClass().add("fieldIncorrect");
                     birthPlaceCorrectInput = false;
@@ -269,7 +269,7 @@ public class OwnerController {
                     birthPlaceCorrectInput = true;
                 }
             }
-        });
+        });*/
     }
 
 
@@ -392,8 +392,13 @@ public class OwnerController {
                 if(first) birthPlaceCorrectInput = true;
                 else addressPlaceCorrectInput = true;
                 String postalNumber = "";
-                if(checkPostalNumber()) {
-                    place = new Place(-1, name, postalNumberField.getText().trim());
+                if(!first) {
+                    if (checkPostalNumber()) {
+                        place = new Place(-1, name, postalNumberField.getText().trim());
+                        postalNumberCorrectInput = true;
+                    }
+                } else {
+                    place = new Place(-1, name, "");
                     postalNumberCorrectInput = true;
                 }
             }
@@ -403,12 +408,14 @@ public class OwnerController {
             if(first) birthPlaceCorrectInput = true;
             else addressPlaceCorrectInput = true;
             if (postalNumberField != null) {
-                if (!postalNumberField.getText().equals(place.getPostalNumber()) && !postalNumberField.getText().isEmpty()) {
-                    comboBox.getStyleClass().removeAll("fieldCorrect");
-                    comboBox.getStyleClass().add("fieldIncorrect");
-                    if(first) birthPlaceCorrectInput = false;
-                    else addressPlaceCorrectInput = false;
-                    return null;
+                if(!first) {
+                    if (!postalNumberField.getText().equals(place.getPostalNumber()) && !postalNumberField.getText().isEmpty()) {
+                        comboBox.getStyleClass().removeAll("fieldCorrect");
+                        comboBox.getStyleClass().add("fieldIncorrect");
+                        if(first) birthPlaceCorrectInput = false;
+                        else addressPlaceCorrectInput = false;
+                        return null;
+                    }
                 }
             }
         }
