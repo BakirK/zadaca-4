@@ -1,15 +1,27 @@
 package ba.unsa.etf.rs.zadaca4;
 
-public class Vehicle implements Comparable<Vehicle>{
+import javafx.beans.property.SimpleStringProperty;
+
+public class Vehicle {
     private int id;
     private Manufacturer manufacturer;
-    private String model, chasisNumber, plateNumber;
+    private String chasisNumber = " ", plateNumber = " ";
+
+    public String getModel() {
+        return model.get();
+    }
+
+    public void setModel(String model) {
+        this.model.set(model);
+    }
+
+    public SimpleStringProperty model = new SimpleStringProperty();
     private Owner owner;
 
     public Vehicle(int id, Manufacturer manufacturer, String model, String chasisNumber, String plateNumber, Owner owner) {
         this.id = id;
         this.manufacturer = manufacturer;
-        this.model = model;
+        this.model.set(model);
         this.chasisNumber = chasisNumber;
         this.plateNumber = plateNumber;
         this.owner = owner;
@@ -34,13 +46,13 @@ public class Vehicle implements Comparable<Vehicle>{
         this.manufacturer = manufacturer;
     }
 
-    public String getModel() {
+    /*public String getModel() {
         return model;
     }
 
     public void setModel(String model) {
         this.model = model;
-    }
+    }*/
 
     public String getChasisNumber() {
         return chasisNumber;
@@ -66,7 +78,6 @@ public class Vehicle implements Comparable<Vehicle>{
         this.owner = owner;
     }
 
-    @Override
     public int compareTo(Vehicle o) {
         return this.id - o.id;
     }

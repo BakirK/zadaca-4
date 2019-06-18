@@ -17,7 +17,9 @@ public class MainController {
     private TableView tableOwners, tableVehicles;
     @FXML
     private TableColumn tableOwnersId, tableOwnersJmbg;
+    @FXML
     private TableColumn<Owner, String> tableOwnersName;
+    @FXML
     private TableColumn tableVehiclesId, tableVehiclesManufacturer,
             tableVehiclesModel, tableVehiclesChasisNumber, tableVehiclesPlateNumber;
     @FXML
@@ -28,12 +30,18 @@ public class MainController {
     public void initialize() {
         dao = new VehicleDAOBase();
         tableOwnersId.setCellValueFactory(new PropertyValueFactory<Owner, Integer>("id"));
-        //tableOwnersName.setCellValueFactory(cellData -> cellData.getValue().theNameProperty());
+        tableOwnersName.setCellValueFactory(cellData -> cellData.getValue().theNameProperty());
         //tableOwnersName.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getTheName()));
         //tableOwnersName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName().concat(" ").concat(data.getValue().getSurname())));
-
         tableOwnersJmbg.setCellValueFactory(new PropertyValueFactory("jmbg"));
         tableOwners.setItems(dao.getOwners());
+
+        tableVehiclesId.setCellValueFactory(new PropertyValueFactory<Vehicle, Integer>("id"));
+        tableVehiclesModel.setCellValueFactory(new PropertyValueFactory<Vehicle, String>("model"));
+        tableVehiclesManufacturer.setCellValueFactory(new PropertyValueFactory<Vehicle, Integer>("manufacturer"));
+        tableVehiclesChasisNumber.setCellValueFactory(new PropertyValueFactory<Vehicle, String>("chasisNumber"));
+        tableVehiclesPlateNumber.setCellValueFactory(new PropertyValueFactory<Vehicle, String>("plateNumber"));
+        tableVehicles.setItems(dao.getVehicles());
     }
 
 
@@ -77,3 +85,4 @@ public class MainController {
     private void editVehicle(ActionEvent actionEvent) {
     }
 }
+
