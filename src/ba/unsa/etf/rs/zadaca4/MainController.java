@@ -75,7 +75,7 @@ public class MainController {
             if (alert.getResult() == ButtonType.OK) {
                 dao.deleteOwner((Owner) tableOwners.getSelectionModel().getSelectedItem());
                 updateTableView();
-                tableOwners.getSelectionModel().selectFirst();
+                //tableOwners.getSelectionModel().selectFirst();
             }
         }
     }
@@ -90,6 +90,17 @@ public class MainController {
 
         @FXML
         private void removeVehicle (ActionEvent actionEvent){
+            if (tableVehicles.getSelectionModel().getSelectedItem() != null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete selected vehicle?", ButtonType.OK, ButtonType.NO, ButtonType.CANCEL);
+                alert.showAndWait();
+
+                if (alert.getResult() == ButtonType.OK) {
+                    dao.deleteOwner((Owner) tableVehicles.getSelectionModel().getSelectedItem());
+                    updateTableView();
+                    //tableVehicles.getSelectionModel().selectFirst();
+                }
+            }
+
         }
 
         @FXML
