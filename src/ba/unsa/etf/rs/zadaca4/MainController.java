@@ -32,7 +32,6 @@ public class MainController {
         tableOwnersId.setCellValueFactory(new PropertyValueFactory<Owner, Integer>("id"));
         tableOwnersName.setCellValueFactory(cellData -> cellData.getValue().theNameProperty());
         //tableOwnersName.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getTheName()));
-        //tableOwnersName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName().concat(" ").concat(data.getValue().getSurname())));
         tableOwnersJmbg.setCellValueFactory(new PropertyValueFactory("jmbg"));
         tableOwners.setItems(dao.getOwners());
 
@@ -51,6 +50,7 @@ public class MainController {
             dao.close();
         }
         dao = new VehicleDAOBase();
+        updateTableView();
     }
 
     @FXML
@@ -59,6 +59,7 @@ public class MainController {
             dao.close();
         }
         dao = new VehicleDAOXML();
+        updateTableView();
     }
 
     @FXML
@@ -95,7 +96,7 @@ public class MainController {
                 alert.showAndWait();
 
                 if (alert.getResult() == ButtonType.OK) {
-                    dao.deleteOwner((Owner) tableVehicles.getSelectionModel().getSelectedItem());
+                    dao.deleteVehicle((Vehicle) tableVehicles.getSelectionModel().getSelectedItem());
                     updateTableView();
                     //tableVehicles.getSelectionModel().selectFirst();
                 }
