@@ -22,8 +22,8 @@ public class VehicleController {
     @FXML
     private ComboBox ownerCombo;
 
-    private boolean modelCorrectInput = false, chasisCorrectInput = false, plateNameCorrectInput = false,
-            manufacturerCorrectInput = false, ownerCorrectInput = false;
+    /*private boolean modelCorrectInput = false, chasisCorrectInput = false, plateNameCorrectInput = false,
+            manufacturerCorrectInput = false, ownerCorrectInput = false;*/
     VehicleDAO dao;
     Vehicle vehicle;
 
@@ -48,39 +48,39 @@ public class VehicleController {
 
         if(vehicle == null) {
             modelField.setText("");
-            modelField.getStyleClass().add("fieldIncorrect");
+            //modelField.getStyleClass().add("fieldIncorrect");
 
             chasisNumberField.setText("");
-            chasisNumberField.getStyleClass().add("fieldIncorrect");
+            //chasisNumberField.getStyleClass().add("fieldIncorrect");
 
             plateNumberField.setText("");
-            plateNumberField.getStyleClass().add("fieldIncorrect");
+            //plateNumberField.getStyleClass().add("fieldIncorrect");
 
             manufacturerCombo.setValue("");
-            manufacturerCombo.getStyleClass().add("fieldIncorrect");
+            //manufacturerCombo.getStyleClass().add("fieldIncorrect");
 
             ownerCombo.setValue("");
-            ownerCombo.getStyleClass().add("fieldIncorrect");
+            //ownerCombo.getStyleClass().add("fieldIncorrect");
         } else {
             modelField.setText(vehicle.getModel());
-            modelField.getStyleClass().add("fieldCorrect");
-            modelCorrectInput = true;
+            //modelField.getStyleClass().add("fieldCorrect");
+            //modelCorrectInput = true;
 
             chasisNumberField.setText(vehicle.getChasisNumber());
-            chasisNumberField.getStyleClass().add("fieldCorrect");
-            chasisCorrectInput = true;
+            //chasisNumberField.getStyleClass().add("fieldCorrect");
+            //chasisCorrectInput = true;
 
             plateNumberField.setText(vehicle.getPlateNumber());
-            plateNumberField.getStyleClass().add("fieldCorrect");
-            plateNameCorrectInput = true;
+            //plateNumberField.getStyleClass().add("fieldCorrect");
+            //plateNameCorrectInput = true;
 
             manufacturerCombo.setValue(vehicle.getManufacturer());
-            manufacturerCombo.getStyleClass().add("fieldCorrect");
-            manufacturerCorrectInput = true;
+            //manufacturerCombo.getStyleClass().add("fieldCorrect");
+            //manufacturerCorrectInput = true;
 
             ownerCombo.setValue(vehicle.getOwner());
-            ownerCombo.getStyleClass().add("fieldCorrect");
-            ownerCorrectInput = true;
+            //ownerCombo.getStyleClass().add("fieldCorrect");
+            //ownerCorrectInput = true;
         }
     }
 
