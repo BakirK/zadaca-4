@@ -63,10 +63,20 @@ public class MainController {
 
     @FXML
     private void addOwner(ActionEvent actionEvent) {
+
     }
 
     @FXML
     private void removeOwner(ActionEvent actionEvent) {
+        if ( tableOwners.getSelectionModel().getSelectedItem() != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete selected owner?", ButtonType.OK, ButtonType.NO, ButtonType.CANCEL);
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.OK) {
+                dao.deleteOwner((Owner) tableOwners.getSelectionModel().getSelectedItem());
+                updateTableView();
+                tableOwners.getSelectionModel().selectFirst();
+        }
     }
 
     @FXML
