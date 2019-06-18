@@ -75,16 +75,17 @@ public class MainController {
         Stage stage = new Stage();
         Parent root = null;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
-            OwnerController voziloController = new OwnerController(dao, null);
-            loader.setController(voziloController);
-            root = loader.load();
-            stage.setTitle("Add vehicle");
-            stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
-            stage.setResizable(false);
-            stage.show();
-
-            stage.setOnHiding( event -> updateTableView());
+            if((Owner) tableOwners.getSelectionModel().getSelectedItem() != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
+                OwnerController ownerController = new OwnerController(dao, null);
+                loader.setController(ownerController);
+                root = loader.load();
+                stage.setTitle("Add owner");
+                stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+                stage.setResizable(false);
+                stage.show();
+                stage.setOnHiding(event -> updateTableView());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,16 +110,17 @@ public class MainController {
             Stage stage = new Stage();
             Parent root = null;
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
-                OwnerController voziloController = new OwnerController(dao, (Owner) tableOwners.getSelectionModel().getSelectedItem());
-                loader.setController(voziloController);
-                root = loader.load();
-                stage.setTitle("Edit vehicle");
-                stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
-                stage.setResizable(false);
-                stage.show();
-
-                stage.setOnHiding( event -> updateTableView());
+                if((Owner) tableOwners.getSelectionModel().getSelectedItem() != null) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
+                    OwnerController ownerController = new OwnerController(dao, (Owner) tableOwners.getSelectionModel().getSelectedItem());
+                    loader.setController(ownerController);
+                    root = loader.load();
+                    stage.setTitle("Edit owner");
+                    stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+                    stage.setResizable(false);
+                    stage.show();
+                    stage.setOnHiding(event -> updateTableView());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -148,16 +150,17 @@ public class MainController {
             Stage stage = new Stage();
             Parent root = null;
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
-                OwnerController voziloController = new OwnerController(dao, (Owner) tableOwners.getSelectionModel().getSelectedItem());
-                loader.setController(voziloController);
-                root = loader.load();
-                stage.setTitle("Edit vehicle");
-                stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
-                stage.setResizable(false);
-                stage.show();
-
-                stage.setOnHiding( event -> updateTableView());
+                if((Vehicle) tableVehicles.getSelectionModel().getSelectedItem() != null) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
+                    VehicleController vehicleController = new VehicleController(dao, (Vehicle) tableVehicles.getSelectionModel().getSelectedItem());
+                    loader.setController(vehicleController);
+                    root = loader.load();
+                    stage.setTitle("Edit vehicle");
+                    stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+                    stage.setResizable(false);
+                    stage.show();
+                    stage.setOnHiding(event -> updateTableView());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
