@@ -311,7 +311,6 @@ public class VehicleDAOBase implements VehicleDAO {
     @Override
     public void addVehicle(Vehicle vehicle)throws IllegalArgumentException  {
         try {
-            //provjera da li postoji owner
             checkOwnerAndManufacturer(vehicle);
             ResultSet res;
             res = getMaxVehicleIdStatement.executeQuery();

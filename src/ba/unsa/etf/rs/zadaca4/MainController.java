@@ -135,18 +135,24 @@ public class MainController {
             Stage stage = new Stage();
             Parent root = null;
             try {
-                if((Vehicle) tableVehicles.getSelectionModel().getSelectedItem() != null) {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
-                    VehicleController vehicleController = new VehicleController(dao,null);
-                    loader.setController(vehicleController);
-                    root = loader.load();
-                    stage.setTitle("Edit vehicle");
-                    stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
-                    stage.setResizable(false);
-                    stage.show();
-                    stage.setOnHiding(event -> updateTableView());
-                }
-            } catch (IOException e) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
+                VehicleController vehicleController = new VehicleController(dao,null);
+                loader.setController(vehicleController);
+                root = loader.load();
+                stage.setTitle("Edit vehicle");
+                stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+                stage.setResizable(false);
+                stage.show();
+                stage.setOnHiding(event -> updateTableView());
+            }
+            catch(IllegalArgumentException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Unable to add vehicle");
+                alert.setContentText(e.getMessage());
+                alert.show();
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -172,15 +178,24 @@ public class MainController {
             Parent root = null;
             try {
                 if((Vehicle) tableVehicles.getSelectionModel().getSelectedItem() != null) {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
-                    VehicleController vehicleController = new VehicleController(dao, (Vehicle) tableVehicles.getSelectionModel().getSelectedItem());
-                    loader.setController(vehicleController);
-                    root = loader.load();
-                    stage.setTitle("Edit vehicle");
-                    stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
-                    stage.setResizable(false);
-                    stage.show();
-                    stage.setOnHiding(event -> updateTableView());
+                    try{
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
+                        VehicleController vehicleController = new VehicleController(dao, (Vehicle) tableVehicles.getSelectionModel().getSelectedItem());
+                        loader.setController(vehicleController);
+                        root = loader.load();
+                        stage.setTitle("Edit vehicle");
+                        stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+                        stage.setResizable(false);
+                        stage.show();
+                        stage.setOnHiding(event -> updateTableView());
+                    }
+                    catch(IllegalArgumentException e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error Dialog");
+                        alert.setHeaderText("Unable to update vehicle");
+                        alert.setContentText(e.getMessage());
+                        alert.show();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
