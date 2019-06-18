@@ -237,13 +237,12 @@ public class VehicleDAOBase implements VehicleDAO {
             ResultSet res = getPlaceStatement.executeQuery();
             if(!res.next()) {
                 ResultSet temp = getMaxPlaceIdStatement.executeQuery();
-                int idTemp = temp.getInt(1);
+                id = temp.getInt(1);
                 addPlaceStatement.setInt(1, id);
                 addPlaceStatement.setString(2, p.getName());
                 addPlaceStatement.setString(3, p.getPostalNumber());
                 addPlaceStatement.executeUpdate();
-                p.setId(idTemp);
-                id = idTemp;
+                p.setId(id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
