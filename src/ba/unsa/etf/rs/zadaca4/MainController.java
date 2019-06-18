@@ -131,11 +131,28 @@ public class MainController {
         }
 
         @FXML
-        private void addVehicle (ActionEvent actionEvent){
+        private void addVehicle (ActionEvent actionEvent) {
+            Stage stage = new Stage();
+            Parent root = null;
+            try {
+                if((Vehicle) tableVehicles.getSelectionModel().getSelectedItem() != null) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
+                    VehicleController vehicleController = new VehicleController(dao,null);
+                    loader.setController(vehicleController);
+                    root = loader.load();
+                    stage.setTitle("Edit vehicle");
+                    stage.setScene(new Scene(root, USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+                    stage.setResizable(false);
+                    stage.show();
+                    stage.setOnHiding(event -> updateTableView());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         @FXML
-        private void removeVehicle (ActionEvent actionEvent){
+        private void removeVehicle (ActionEvent actionEvent) {
             if (tableVehicles.getSelectionModel().getSelectedItem() != null) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete selected vehicle?", ButtonType.OK, ButtonType.NO, ButtonType.CANCEL);
                 alert.showAndWait();
@@ -150,7 +167,7 @@ public class MainController {
         }
 
         @FXML
-        private void editVehicle (ActionEvent actionEvent){
+        private void editVehicle (ActionEvent actionEvent) {
             Stage stage = new Stage();
             Parent root = null;
             try {
