@@ -226,6 +226,21 @@ public class OwnerController {
             }
         });
 
+        dateField.getEditor().focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(t1) {
+                            dateField.getEditor().selectAll();
+                        }
+                    }
+                });
+            }
+        });
+
+
         jmbgField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
