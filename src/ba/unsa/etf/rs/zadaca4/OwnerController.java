@@ -203,12 +203,12 @@ public class OwnerController {
 
         dateField.setConverter(new StringConverter<LocalDate>() {
             {
-                dateField.setPromptText("dd. MM. yyyy");
+                dateField.setPromptText("d/M/yyyy");
             }
             @Override
             public String toString(LocalDate localDate) {
                 if (localDate != null) {
-                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd. MM. yyyy");
+                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
                     return dateFormat.format(localDate);
                 } else {
                     return "";
@@ -218,7 +218,7 @@ public class OwnerController {
             @Override
             public LocalDate fromString(String s) {
                 if (s != null && !s.isEmpty()) {
-                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd. MM. yyyy");
+                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
                     return LocalDate.parse(s, dateFormat);
                 } else {
                     return null;
@@ -240,7 +240,7 @@ public class OwnerController {
             }
         });
 
-
+/*
         jmbgField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
@@ -252,7 +252,7 @@ public class OwnerController {
                     checkJMBG(t1);
                 }
             }
-        });
+        });*/
 /*
         addressPlace.valueProperty().addListener(new ChangeListener() {
             @Override
@@ -302,7 +302,7 @@ public class OwnerController {
             jmbgField.getStyleClass().add("fieldIncorrect");
             jmbgCorrectInput = false;
         }
-
+        System.out.println(jmbg);
         int day = Integer.parseInt(jmbg.substring(0, 2));
         int month = Integer.parseInt(jmbg.substring(2, 4));
         int year = Integer.parseInt(jmbg.substring(4, 7));
