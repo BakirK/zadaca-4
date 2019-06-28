@@ -71,7 +71,7 @@
                         </BorderPane>
                     </content>
                 </Tab>
-                <Tab fx:id="vehiclesTab" text="Vehicles">
+                <Tab fx:id="vehicleTab" text="Vehicles">
                     <content>
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
                             <top>

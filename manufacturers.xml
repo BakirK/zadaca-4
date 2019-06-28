@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="11.0.2" class="java.beans.XMLDecoder">
+<java version="1.8.0_191" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
   <void method="add">
    <object class="ba.unsa.etf.rs.zadaca4.Manufacturer">
     <void property="id">
-     <int>3</int>
+     <int>1</int>
     </void>
     <void property="name">
-     <string>Ford</string>
+     <string>Volkswagen</string>
     </void>
    </object>
   </void>
@@ -24,20 +24,10 @@
   <void method="add">
    <object class="ba.unsa.etf.rs.zadaca4.Manufacturer">
     <void property="id">
-     <int>1</int>
+     <int>3</int>
     </void>
     <void property="name">
-     <string>Volkswagen</string>
-    </void>
-   </object>
-  </void>
-  <void method="add">
-   <object class="ba.unsa.etf.rs.zadaca4.Manufacturer">
-    <void property="id">
-     <int>4</int>
-    </void>
-    <void property="name">
-     <string>Hyundai</string>
+     <string>Ford</string>
     </void>
    </object>
   </void>
