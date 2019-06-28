@@ -312,55 +312,64 @@ public class OwnerController {
             jmbgCorrectInput = false;
         }
         if(!jmbg.isEmpty()) {
+            try {
+                int day = Integer.parseInt(jmbg.substring(0, 2));
+                int month = Integer.parseInt(jmbg.substring(2, 4));
+                int year = Integer.parseInt(jmbg.substring(4, 7));
+                if (year <= 18) {
+                    year += 2000;
+                } else {
+                    year += 1000;
+                }
+                if (!checkDate(day, month, year)) {
+                    jmbgField.getStyleClass().removeAll("fieldCorrect");
+                    jmbgField.getStyleClass().add("fieldIncorrect");
+                    jmbgCorrectInput = false;
+                }
+                LocalDate date = dateField.getValue();
+                if (date.isAfter(LocalDate.now())) {
+                    jmbgField.getStyleClass().removeAll("fieldCorrect");
+                    jmbgField.getStyleClass().add("fieldIncorrect");
+                    jmbgCorrectInput = false;
+                }
+                if (date.getDayOfMonth() != day) {
+                    jmbgField.getStyleClass().removeAll("fieldCorrect");
+                    jmbgField.getStyleClass().add("fieldIncorrect");
+                    jmbgCorrectInput = false;
+                }
+                if (date.getYear() != year) {
+                    jmbgField.getStyleClass().removeAll("fieldCorrect");
+                    jmbgField.getStyleClass().add("fieldIncorrect");
+                    jmbgCorrectInput = false;
+                }
+                int[] numbers = new int[13];
+                for (int i = 0; i < 13; i++) {
+                    numbers[i] = Integer.parseInt(jmbg.substring(i, i + 1));
+                }
+                int sum = 7 * (numbers[0] + numbers[6]) + 6 * (numbers[1] + numbers[7]) + 5 * (numbers[2] + numbers[8]) + 4 *
+                        (numbers[3] + numbers[9]) + 3 * (numbers[4] + numbers[10]) + 2 * (numbers[5] + numbers[11]);
+                sum = 11 - (sum % 11);
+                if (sum == 10 || sum == 11) {
+                    sum = 0;
+                }
+                if (numbers[12] != sum) {
+                    jmbgField.getStyleClass().removeAll("fieldCorrect");
+                    jmbgField.getStyleClass().add("fieldIncorrect");
+                    jmbgCorrectInput = false;
+                }
+                else {
+                    jmbgField.getStyleClass().removeAll("fieldIncorrect");
+                    jmbgField.getStyleClass().add("fieldCorrect");
+                    jmbgCorrectInput = true;
+                }
 
-
-            int day = Integer.parseInt(jmbg.substring(0, 2));
-            int month = Integer.parseInt(jmbg.substring(2, 4));
-            int year = Integer.parseInt(jmbg.substring(4, 7));
-            if (year <= 18) {
-                year += 2000;
-            } else {
-                year += 1000;
             }
-            if (!checkDate(day, month, year)) {
+            catch (Exception e) {
+                System.out.println("belaj");
                 jmbgField.getStyleClass().removeAll("fieldCorrect");
                 jmbgField.getStyleClass().add("fieldIncorrect");
                 jmbgCorrectInput = false;
             }
-            LocalDate date = dateField.getValue();
-            if (date.isAfter(LocalDate.now())) {
-                jmbgField.getStyleClass().removeAll("fieldCorrect");
-                jmbgField.getStyleClass().add("fieldIncorrect");
-                jmbgCorrectInput = false;
-            }
-            if (date.getDayOfMonth() != day) {
-                jmbgField.getStyleClass().removeAll("fieldCorrect");
-                jmbgField.getStyleClass().add("fieldIncorrect");
-                jmbgCorrectInput = false;
-            }
-            if (date.getYear() != year) {
-                jmbgField.getStyleClass().removeAll("fieldCorrect");
-                jmbgField.getStyleClass().add("fieldIncorrect");
-                jmbgCorrectInput = false;
-            }
-            int[] numbers = new int[13];
-            for (int i = 0; i < 13; i++) {
-                numbers[i] = Integer.parseInt(jmbg.substring(i, i + 1));
-            }
-            int sum = 7 * (numbers[0] + numbers[6]) + 6 * (numbers[1] + numbers[7]) + 5 * (numbers[2] + numbers[8]) + 4 *
-                    (numbers[3] + numbers[9]) + 3 * (numbers[4] + numbers[10]) + 2 * (numbers[5] + numbers[11]);
-            sum = 11 - (sum % 11);
-            if (sum == 10 || sum == 11) {
-                sum = 0;
-            }
-            if (numbers[12] != sum) {
-                jmbgField.getStyleClass().removeAll("fieldCorrect");
-                jmbgField.getStyleClass().add("fieldIncorrect");
-                jmbgCorrectInput = false;
-            }
-            jmbgField.getStyleClass().removeAll("fieldIncorrect");
-            jmbgField.getStyleClass().add("fieldCorrect");
-            jmbgCorrectInput = true;
         }
         else {
             jmbgCorrectInput = false;
