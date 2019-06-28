@@ -54,7 +54,7 @@ class VehicleControllerTest {
             Files.copy(fxml.toPath(), rsrc.toPath());
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vozilo.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
         VehicleController vehicleController = new VehicleController(dao, null);
         loader.setController(vehicleController);
         Parent root = loader.load();
