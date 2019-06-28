@@ -50,11 +50,11 @@ public class OwnerController {
         this.owner = owner;
         this.dao = dao;
     }
-
+    private ObservableList<Place> places;
 
     @FXML
     public void initialize() {
-        ObservableList<Place> places = dao.getPlaces();
+        places = dao.getPlaces();
         placeOfBirth.setItems(places);
         addressPlace.setItems(places);
 
@@ -122,6 +122,15 @@ public class OwnerController {
             postalNumberCorrectInput = true;
 
         }
+
+        addressPlace.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object o, Object t1) {
+                if(t1 instanceof Place) {
+                    postalNumberField.setText(((Place) t1).getPostalNumber());
+                }
+            }
+        });
 
         nameField.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -302,54 +311,60 @@ public class OwnerController {
             jmbgField.getStyleClass().add("fieldIncorrect");
             jmbgCorrectInput = false;
         }
-        System.out.println(jmbg);
-        int day = Integer.parseInt(jmbg.substring(0, 2));
-        int month = Integer.parseInt(jmbg.substring(2, 4));
-        int year = Integer.parseInt(jmbg.substring(4, 7));
-        if (year <= 18) {
-            year += 2000;
-        } else {
-            year += 1000;
+        if(!jmbg.isEmpty()) {
+
+
+            int day = Integer.parseInt(jmbg.substring(0, 2));
+            int month = Integer.parseInt(jmbg.substring(2, 4));
+            int year = Integer.parseInt(jmbg.substring(4, 7));
+            if (year <= 18) {
+                year += 2000;
+            } else {
+                year += 1000;
+            }
+            if (!checkDate(day, month, year)) {
+                jmbgField.getStyleClass().removeAll("fieldCorrect");
+                jmbgField.getStyleClass().add("fieldIncorrect");
+                jmbgCorrectInput = false;
+            }
+            LocalDate date = dateField.getValue();
+            if (date.isAfter(LocalDate.now())) {
+                jmbgField.getStyleClass().removeAll("fieldCorrect");
+                jmbgField.getStyleClass().add("fieldIncorrect");
+                jmbgCorrectInput = false;
+            }
+            if (date.getDayOfMonth() != day) {
+                jmbgField.getStyleClass().removeAll("fieldCorrect");
+                jmbgField.getStyleClass().add("fieldIncorrect");
+                jmbgCorrectInput = false;
+            }
+            if (date.getYear() != year) {
+                jmbgField.getStyleClass().removeAll("fieldCorrect");
+                jmbgField.getStyleClass().add("fieldIncorrect");
+                jmbgCorrectInput = false;
+            }
+            int[] numbers = new int[13];
+            for (int i = 0; i < 13; i++) {
+                numbers[i] = Integer.parseInt(jmbg.substring(i, i + 1));
+            }
+            int sum = 7 * (numbers[0] + numbers[6]) + 6 * (numbers[1] + numbers[7]) + 5 * (numbers[2] + numbers[8]) + 4 *
+                    (numbers[3] + numbers[9]) + 3 * (numbers[4] + numbers[10]) + 2 * (numbers[5] + numbers[11]);
+            sum = 11 - (sum % 11);
+            if (sum == 10 || sum == 11) {
+                sum = 0;
+            }
+            if (numbers[12] != sum) {
+                jmbgField.getStyleClass().removeAll("fieldCorrect");
+                jmbgField.getStyleClass().add("fieldIncorrect");
+                jmbgCorrectInput = false;
+            }
+            jmbgField.getStyleClass().removeAll("fieldIncorrect");
+            jmbgField.getStyleClass().add("fieldCorrect");
+            jmbgCorrectInput = true;
         }
-        if(!checkDate(day, month, year)) {
-            jmbgField.getStyleClass().removeAll("fieldCorrect");
-            jmbgField.getStyleClass().add("fieldIncorrect");
+        else {
             jmbgCorrectInput = false;
         }
-        LocalDate date = dateField.getValue();
-        if(date.isAfter(LocalDate.now())) {
-            jmbgField.getStyleClass().removeAll("fieldCorrect");
-            jmbgField.getStyleClass().add("fieldIncorrect");
-            jmbgCorrectInput = false;
-        }
-        if (date.getDayOfMonth() != day) {
-            jmbgField.getStyleClass().removeAll("fieldCorrect");
-            jmbgField.getStyleClass().add("fieldIncorrect");
-            jmbgCorrectInput = false;
-        }
-        if (date.getYear() != year) {
-            jmbgField.getStyleClass().removeAll("fieldCorrect");
-            jmbgField.getStyleClass().add("fieldIncorrect");
-            jmbgCorrectInput = false;
-        }
-        int[] numbers = new int[13];
-        for (int i=0; i < 13; i++) {
-            numbers[i] = Integer.parseInt(jmbg.substring(i, i + 1));
-        }
-        int sum = 7 * (numbers[0] + numbers[6]) + 6 * (numbers[1] + numbers[7]) + 5 * (numbers[2]+numbers[8]) + 4 *
-                (numbers[3] + numbers[9]) + 3 * (numbers[4] + numbers[10]) + 2 * (numbers[5] + numbers[11]);
-        sum = 11 - (sum % 11);
-        if (sum ==10  || sum == 11) {
-            sum = 0;
-        }
-        if (numbers[12] != sum) {
-            jmbgField.getStyleClass().removeAll("fieldCorrect");
-            jmbgField.getStyleClass().add("fieldIncorrect");
-            jmbgCorrectInput = false;
-        }
-        jmbgField.getStyleClass().removeAll("fieldIncorrect");
-        jmbgField.getStyleClass().add("fieldCorrect");
-        jmbgCorrectInput = true;
     }
 
     @FXML
@@ -421,17 +436,22 @@ public class OwnerController {
                 comboBox.getStyleClass().add("fieldCorrect");
                 if(first) birthPlaceCorrectInput = true;
                 else addressPlaceCorrectInput = true;
-                String postalNumber = "";
                 if(!first) {
                     if (checkPostalNumber()) {
                         place = new Place(-1, name, postalNumberField.getText().trim());
                         postalNumberCorrectInput = true;
+                        postalNumberField.getStyleClass().removeAll("fieldIncorrect");
+                        postalNumberField.getStyleClass().add("fieldCorrect");
                     } else {
                         postalNumberCorrectInput = false;
+                        comboBox.getStyleClass().removeAll("fieldCorrect");
+                        comboBox.getStyleClass().add("fieldIncorrect");
                     }
                 } else {
                     place = new Place(-1, name, "");
                     postalNumberCorrectInput = true;
+                    postalNumberField.getStyleClass().removeAll("fieldIncorrect");
+                    postalNumberField.getStyleClass().add("fieldCorrect");
                 }
             }
         } else {
@@ -451,35 +471,38 @@ public class OwnerController {
                     }
                 } else {
                     postalNumberCorrectInput = true;
+
                 }
         }
         return place;
     }
 
     private boolean checkPostalNumber() {
-        String adresa = "http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=";
-        adresa += postalNumberField.getText().trim();
-        try {
-            URL url = new URL(adresa);
-            BufferedReader input = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-            String json = "", line = null;
-            while ((line = input.readLine()) != null) {
-                json += line;
+        if(!postalNumberField.getText().isEmpty()) {
+            String adresa = "http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=";
+            adresa += postalNumberField.getText().trim();
+            try {
+                URL url = new URL(adresa);
+                BufferedReader input = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+                String json = "", line = null;
+                while ((line = input.readLine()) != null) {
+                    json += line;
+                }
+                input.close();
+                if (json.equals("OK")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (MalformedURLException e) {
+                System.out.println("String " + adresa + " ne predstavlja validan URL");
+            } catch (IOException e) {
+                System.out.println("Greška pri kreiranju ulaznog toka");
+                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Poteškoće sa obradom JSON podataka");
+                System.out.println(e.getMessage());
             }
-            input.close();
-            if (json.equals("OK")) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch(MalformedURLException e) {
-            System.out.println("String "+adresa+" ne predstavlja validan URL");
-        } catch(IOException e) {
-            System.out.println("Greška pri kreiranju ulaznog toka");
-            System.out.println(e.getMessage());
-        } catch(Exception e) {
-            System.out.println("Poteškoće sa obradom JSON podataka");
-            System.out.println(e.getMessage());
         }
         return false;
     }
