@@ -58,7 +58,7 @@ public class OwnerEditTest {
         ObservableList<Owner> owners = dao.getOwners();
         testTestovic = owners.get(1);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vlasnik.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/owner.fxml"));
         OwnerController ownerController = new OwnerController(dao, testTestovic);
         loader.setController(ownerController);
         Parent root = loader.load();
@@ -251,7 +251,7 @@ public class OwnerEditTest {
         robot.clickOn("#jmbgField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.write("0801003500007");
-        robot.clickOn("#imeField");
+        robot.clickOn("#nameField");
         robot.press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         robot.press(KeyCode.DELETE).release(KeyCode.DELETE);
 
