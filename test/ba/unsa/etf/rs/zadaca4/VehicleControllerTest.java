@@ -232,7 +232,7 @@ class VehicleControllerTest {
 
     @Test
     public void testAdd (FxRobot robot) {
-        robot.clickOn("#manufacturer");
+        robot.clickOn("#manufacturerCombo");
         robot.write("Skoda");
         robot.clickOn("#modelField");
         robot.write("Fabia");
