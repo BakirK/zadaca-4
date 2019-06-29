@@ -94,11 +94,12 @@ public class VehicleController {
             modelField.getStyleClass().add("fieldIncorrect");
         }
 
-        plateNameCorrectInput = !plateNumberField.getText().isEmpty();
-        if(plateNameCorrectInput) {
+        if(checkPlates()) {
+            plateNameCorrectInput = true;
             plateNumberField.getStyleClass().removeAll("fieldIncorrect");
             plateNumberField.getStyleClass().add("fieldCorrect");
         } else {
+            plateNameCorrectInput = false;
             plateNumberField.getStyleClass().removeAll("fieldCorrect");
             plateNumberField.getStyleClass().add("fieldIncorrect");
         }
@@ -131,7 +132,34 @@ public class VehicleController {
             ownerCombo.getStyleClass().removeAll("fieldIncorrect");
             ownerCombo.getStyleClass().add("fieldCorrect");
         }
+    }
 
+
+    boolean checkPlates() {
+        if(plateNumberField.getText().isEmpty() || plateNumberField.getText().length() != 9) {
+            return false;
+        }
+        if(!Character.isLetter(plateNumberField.getText().charAt(0)) ) {
+            return false;
+        }
+        if(plateNumberField.getText().charAt(3) != '-' || plateNumberField.getText().charAt(5) != '-') {
+            return false;
+        }
+        for(int i = 1; i < 3; i++) {
+            if(Character.isLetter(plateNumberField.getText().charAt(i))) {
+                return false;
+            }
+        }
+        for(int i = 6; i < 9; i++) {
+            if(Character.isLetter(plateNumberField.getText().charAt(i))) {
+                return false;
+            }
+        }
+        char letter = plateNumberField.getText().charAt(4);
+        if(letter != 'O' && letter != 'E' && letter != 'K' && letter != 'M' && letter != 'A') {
+            return false;
+        }
+        return true;
     }
 
     @FXML
