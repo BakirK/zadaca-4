@@ -113,7 +113,7 @@ public class VehicleController {
             chasisNumberField.getStyleClass().add("fieldIncorrect");
         }
 
-        if(manufacturerCombo.getValue() == null) {
+        if(manufacturerCombo.getValue().toString().isEmpty()) {
             manufacturerCorrectInput = false;
             manufacturerCombo.getStyleClass().removeAll("fieldCorrect");
             manufacturerCombo.getStyleClass().add("fieldIncorrect");
@@ -122,8 +122,7 @@ public class VehicleController {
             manufacturerCombo.getStyleClass().removeAll("fieldIncorrect");
             manufacturerCombo.getStyleClass().add("fieldCorrect");
         }
-
-        if(ownerCombo.getValue() == null) {
+        if(ownerCombo.getValue().toString().isEmpty()) {
             ownerCorrectInput = false;
             ownerCombo.getStyleClass().removeAll("fieldCorrect");
             ownerCombo.getStyleClass().add("fieldIncorrect");
@@ -145,7 +144,7 @@ public class VehicleController {
             adding = true;
         }
         if(m != null && modelCorrectInput && chasisCorrectInput && plateNameCorrectInput
-                        && ownerCorrectInput && manufacturerCorrectInput) {
+                                            && ownerCorrectInput && manufacturerCorrectInput) {
             vehicle.setModel(modelField.getText());
             vehicle.setPlateNumber(plateNumberField.getText());
             vehicle.setChasisNumber(chasisNumberField.getText());
