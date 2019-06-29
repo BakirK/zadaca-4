@@ -209,7 +209,7 @@ public class OwnerController {
                 }
             }
         });
-
+/*
         dateField.setConverter(new StringConverter<LocalDate>() {
             {
                 dateField.setPromptText("d/M/yyyy");
@@ -233,7 +233,7 @@ public class OwnerController {
                     return null;
                 }
             }
-        });
+        });*/
 
         dateField.getEditor().focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -365,7 +365,6 @@ public class OwnerController {
 
             }
             catch (Exception e) {
-                System.out.println("belaj");
                 jmbgField.getStyleClass().removeAll("fieldCorrect");
                 jmbgField.getStyleClass().add("fieldIncorrect");
                 jmbgCorrectInput = false;
@@ -488,29 +487,21 @@ public class OwnerController {
 
     private boolean checkPostalNumber() {
         if(!postalNumberField.getText().isEmpty()) {
-            String adresa = "http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=";
-            adresa += postalNumberField.getText().trim();
+            String link = "http://c9.etf.unsa.ba/proba/postanskiBroj.php?postanskiBroj=";
+            link += postalNumberField.getText().trim();
             try {
-                URL url = new URL(adresa);
+                URL url = new URL(link);
                 BufferedReader input = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
                 String json = "", line = null;
                 while ((line = input.readLine()) != null) {
                     json += line;
                 }
                 input.close();
-                if (json.equals("OK")) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return json.equals("OK");
             } catch (MalformedURLException e) {
-                System.out.println("String " + adresa + " ne predstavlja validan URL");
+                e.printStackTrace();
             } catch (IOException e) {
-                System.out.println("Greška pri kreiranju ulaznog toka");
-                System.out.println(e.getMessage());
-            } catch (Exception e) {
-                System.out.println("Poteškoće sa obradom JSON podataka");
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
         return false;
